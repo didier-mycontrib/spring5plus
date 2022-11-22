@@ -5,6 +5,7 @@ package tp.appliSpring.core.exception;
 public class NotFoundException extends RuntimeException {
 
 	public NotFoundException() {
+		super("NotFoundException: no entity exists with searched id");
 	}
 
 	public NotFoundException(String message) {

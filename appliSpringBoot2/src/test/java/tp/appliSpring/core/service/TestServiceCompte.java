@@ -201,7 +201,7 @@ public class TestServiceCompte {
 		logger.debug("CompteDtoRelu apres insertion=" + compteDtoRelu);
 		compteDtoSauvegarde.setSolde(150.0);
 		compteDtoSauvegarde.setLabel("CompteDto_a");
-		CompteDto compteDtoMisAjour = this.serviceCompteDto.updateExisting(compteDtoSauvegarde,compteDtoSauvegarde.getNumero()); // UPDATE
+		CompteDto compteDtoMisAjour = this.serviceCompteDto.updateExisting(compteDtoSauvegarde); // UPDATE
 		logger.debug("compteDtoMisAjour=" + compteDtoMisAjour);
 		compteDtoRelu = this.serviceCompteDto.searchById(compteDtoSauvegarde.getNumero()); // SELECT
 		Assertions.assertEquals("CompteDto_a", compteDtoRelu.getLabel());

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import tp.appliSpring.core.exception.ConflictException;
 import tp.appliSpring.core.exception.NotFoundException;
 import tp.appliSpring.dto.ApiError;
 
@@ -30,5 +31,10 @@ public class RestResponseEntityExceptionHandler
 	   protected ResponseEntity<Object> handleEntityNotFound(
 	           NotFoundException ex) {
 	       return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND,ex));
+	   }
+	@ExceptionHandler(ConflictException.class)
+	   protected ResponseEntity<Object> handleConflict(
+			   ConflictException ex) {
+	       return buildResponseEntity(new ApiError(HttpStatus.CONFLICT,ex));
 	   }
 }

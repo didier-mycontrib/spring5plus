@@ -68,7 +68,7 @@ public class TestServiceClient {
 				Assertions.assertEquals("Therieur",clientRelu.getLastName());
 				logger.debug("ClientRelu apres insertion=" + clientRelu);
 				clientSauvegarde.setFirstName("alain"); 
-				ClientDto clientMisAjour = this.serviceClient.updateExisting(clientSauvegarde , clientSauvegarde.getNumber()); //UPDATE
+				ClientDto clientMisAjour = this.serviceClient.updateExisting(clientSauvegarde); //UPDATE
 				logger.debug("ClientMisAjour=" + clientMisAjour);
 				clientRelu = this.serviceClient.searchById(clientSauvegarde.getNumber());  //SELECT
 				Assertions.assertEquals("alain",clientRelu.getFirstName());

@@ -10,18 +10,20 @@ import tp.appliSpring.converter.MyGenericMapper;
 import tp.appliSpring.converter.MyMapper;
 import tp.appliSpring.core.dao.DaoCompte;
 import tp.appliSpring.core.dao.DaoOperation;
+import tp.appliSpring.core.entity.Client;
 import tp.appliSpring.core.entity.Compte;
 import tp.appliSpring.core.entity.Operation;
 import tp.appliSpring.core.exception.NotFoundException;
 import tp.appliSpring.core.exception.SoldeInsuffisantException;
 import tp.appliSpring.core.service.ServiceCompteWithDto;
+import tp.appliSpring.dto.ClientDto;
 import tp.appliSpring.dto.CompteDto;
 import tp.appliSpring.dto.CompteDtoEx;
 
 @Service
 @Transactional
 public class ServiceCompteWithDtoImpl 
-  extends AbstractGenericStdServiceWithDto<CompteDto,Long,Compte,DaoCompte> 
+  extends AbstractGenericServiceWithDto<CompteDto,CompteDtoEx,Long,Compte,DaoCompte> 
   implements ServiceCompteWithDto{
 	
 	private DaoCompte daoCompte; //for specific methods of this class
@@ -29,9 +31,15 @@ public class ServiceCompteWithDtoImpl
 	
 	private MyMapper myMapper;
 	
+	static IdHelper<CompteDto,Compte,Long> compteIdHelper = new IdHelper<>(){
+		@Override public Long extractEntityId(Compte e) {return e.getNumero();}
+		@Override public Long extractDtoId(CompteDto dto) {return dto.getNumero();}
+		@Override public void setDtoId(CompteDto dto, Long id) { dto.setNumero(id); }
+	};
+	
 	@Autowired
 	public ServiceCompteWithDtoImpl(DaoCompte daoCompte,DaoOperation daoOperation ,MyMapper myMapper) {
-		super(CompteDto.class, Compte.class, daoCompte);
+		super(CompteDto.class, CompteDtoEx.class,Compte.class, daoCompte,compteIdHelper);
 		this.daoCompte=daoCompte;
 		this.daoOperation=daoOperation;
 		this.myMapper=myMapper;

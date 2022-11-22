@@ -7,7 +7,7 @@ import tp.appliSpring.core.exception.SoldeInsuffisantException;
 import tp.appliSpring.dto.CompteDto;
 import tp.appliSpring.dto.CompteDtoEx;
 
-public interface ServiceCompteWithDto extends StdGenericServiceWithDto<CompteDto,Long>{
+public interface ServiceCompteWithDto extends GenericServiceWithDto<CompteDto,CompteDtoEx,Long>{
 	
 	public CompteDtoEx searchCompteWithOperationsById(Long numCompte);
 
