@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import tp.appliSpring.converter.MyMapper;
+import tp.appliSpring.converter.MyGenericMapper;
 import tp.appliSpring.core.dao.DaoClient;
 import tp.appliSpring.core.entity.Client;
-import tp.appliSpring.core.entity.Compte;
 import tp.appliSpring.core.service.ServiceClientWithDto;
 import tp.appliSpring.dto.ClientDto;
 import tp.appliSpring.dto.ClientDtoEx;
@@ -20,32 +19,30 @@ public class ServiceClientWithDtoImpl
 	
 	private DaoClient daoClient; //for specific methods of this class
 	
-	private MyMapper myMapper;
-	
+		
 	static IdHelper<ClientDto,Client,Long> clientIdHelper = new IdHelper<>(){
 		@Override public Long extractEntityId(Client e) {return e.getNumero();}
-		@Override public Long extractDtoId(ClientDto dto) {return dto.getNumber();}
-		@Override public void setDtoId(ClientDto dto, Long id) { dto.setNumber(id); }
+		@Override public Long extractDtoId(ClientDto dto) {return dto.getNumero();}
+		@Override public void setDtoId(ClientDto dto, Long id) { dto.setNumero(id); }
 	};
 	
 	@Autowired
-	public ServiceClientWithDtoImpl(DaoClient daoClient,MyMapper myMapper) {
+	public ServiceClientWithDtoImpl(DaoClient daoClient) {
 		super(ClientDto.class, ClientDtoEx.class ,Client.class, daoClient,clientIdHelper);
 		this.daoClient=daoClient;
-		this.myMapper=myMapper;
-	}
+		}
 
 	@Override
 	public ClientDtoEx searchCustomerWithAccountsById(Long numClient) {
 		Client client  = daoClient.findWithAccountById(numClient);
-		return myMapper.clientToClientDtoEx(client);
+		return MyGenericMapper.map(client,ClientDtoEx.class);
 	}
 
 	@Override
 	public ClientDtoEx saveNewEx(ClientDtoEx clientDtoEx) {
-		Client clientEntity  = myMapper.clientDtoExToClient(clientDtoEx);
+		Client clientEntity  = MyGenericMapper.map(clientDtoEx,Client.class);
 		daoClient.save(clientEntity);
-		clientDtoEx.setNumber(clientEntity.getNumero());
+		clientDtoEx.setNumero(clientEntity.getNumero());
 		return clientDtoEx;
 	}
 

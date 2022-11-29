@@ -78,6 +78,12 @@ public class CompteRestCtrl extends AbstractGenericRestCtrl<CompteDto,CompteDtoE
 		return compteDtoList;
 	}
 
+	
+	// URL= http://localhost:8080/appliSpringBoot/bank-api/compte/withDetails/1_or_other_id
+	@GetMapping("/withDetails/{id}")
+	public CompteDto getDtoByIdWithDetails(@PathVariable("id") Long id) throws NotFoundException {
+		return serviceCompteWithDto.searchCompteWithOperationsById(id);
+	}
 
 
 	// URL= http://localhost:8080/appliSpringBoot/bank-api/compte/virement

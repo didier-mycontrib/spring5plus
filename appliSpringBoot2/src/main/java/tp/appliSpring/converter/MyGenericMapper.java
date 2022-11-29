@@ -18,14 +18,15 @@ public class MyGenericMapper {
 	public static <S,D> D map(S source,Class<D> destinationClass) {
 		D destination = null;
 		try {
-			//With mapStruct
+			
+			//With mapStruct style Mapper:
 			String convertMethodName=withFirstLowerCase(source.getClass().getSimpleName() + "To" + destinationClass.getSimpleName());
 			//System.out.println("convertMethodName="+convertMethodName);
 			Method convertMethod=mapper.getClass().getDeclaredMethod(convertMethodName,source.getClass());
 			if(convertMethod!=null) {
 				destination = (D) convertMethod.invoke(mapper, source);
 			}else {
-				//without mapStruct (as fault back)
+				//without mapStruct mapper (as fault back)
 				destination = destinationClass.getDeclaredConstructor().newInstance();
 				BeanUtils.copyProperties(source, destination);
 			}

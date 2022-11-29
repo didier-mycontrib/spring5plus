@@ -14,7 +14,7 @@ var traiterReponse = function(response) {
 	//response ici au format "json string"
 	let zoneResultat = document.getElementById("spanRes");
 	let jsClient = JSON.parse(response);
-	zoneResultat.innerHTML = jsClient.number + " " + jsClient.firstName + " " + jsClient.lastName; //...
+	zoneResultat.innerHTML = jsClient.numero + " " + jsClient.prenom + " " + jsClient.nom; //...
 }
 
 function onSearchClient() {
@@ -47,7 +47,7 @@ function doAjout(){
        document.getElementById("spanMessage").innerHTML="<b>"+message+"</b>";
     }
 
-    var jsCustomerObject = { firstName : prenom , lastName : nom , address : adresse , email : email };
+    var jsCustomerObject = { prenom : prenom , nom : nom , adresse : adresse , email : email };
     var jsonData = JSON.stringify(jsCustomerObject);
 
     var token = sessionStorage.getItem("token");

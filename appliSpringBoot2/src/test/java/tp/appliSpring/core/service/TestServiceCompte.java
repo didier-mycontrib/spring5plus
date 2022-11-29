@@ -46,45 +46,40 @@ public class TestServiceCompte {
 
 	@Test
 	public void testVirement() {
-		CompteDto compteDtoBSauvegarde = this.serviceCompteDto.saveNew(new CompteDto(null, "compteDtoB", 300.0));
-		CompteDto CompteDtoBSauvegarde = this.serviceCompteDto.saveNew(new CompteDto(null, "CompteDtoB", 100.0));
-		long numCptA = compteDtoBSauvegarde.getNumero();
-		long numCptB = CompteDtoBSauvegarde.getNumero();
+		CompteDto compteDtoASauvegarde = this.serviceCompteDto.saveNew(new CompteDto(null, "compteDtoA", 300.0));
+		CompteDto compteDtoBSauvegarde = this.serviceCompteDto.saveNew(new CompteDto(null, "CompteDtoB", 100.0));
+		long numCptA = compteDtoASauvegarde.getNumero();
+		long numCptB = compteDtoBSauvegarde.getNumero();
 		// remonter en memoire les anciens soldes des CompteDto A et B avant virement
 		// (+affichage console ou logger) :
-		double soldeA_avant = compteDtoBSauvegarde.getSolde();
-		double soldeB_avant = CompteDtoBSauvegarde.getSolde();
+		double soldeA_avant = compteDtoASauvegarde.getSolde();
+		double soldeB_avant = compteDtoBSauvegarde.getSolde();
 		logger.debug("avant bon virement, soldeA_avant=" + soldeA_avant + " et soldeB_avant=" + soldeB_avant);
 		// effectuer un virement de 50 euros d'un CompteDto A vers vers CompteDto B
 		this.serviceCompteDto.transfer(50.0, numCptA, numCptB);
 		// remonter en memoire les nouveaux soldes des CompteDto A et B apres virement
 		// (+affichage console ou logger)
-		CompteDto compteDtoBReluApresVirement = this.serviceCompteDto.searchById(numCptA);
-		CompteDto CompteDtoBReluApresVirement = this.serviceCompteDto.searchById(numCptB);
-		double soldeA_apres = compteDtoBReluApresVirement.getSolde();
-		double soldeB_apres = CompteDtoBReluApresVirement.getSolde();
+		CompteDto compteDtoAReluApresVirement = this.serviceCompteDto.searchById(numCptA);
+		CompteDto compteDtoBReluApresVirement = this.serviceCompteDto.searchById(numCptB);
+		double soldeA_apres = compteDtoAReluApresVirement.getSolde();
+		double soldeB_apres = compteDtoBReluApresVirement.getSolde();
 		logger.debug("apres bon virement, soldeA_apres=" + soldeA_apres + " et soldeB_apres=" + soldeB_apres);
 		// verifier -50 et +50 sur les différences de soldes sur A et B :
 		Assertions.assertEquals(soldeA_avant - 50, soldeA_apres, 0.000001);
 		Assertions.assertEquals(soldeB_avant + 50, soldeB_apres, 0.000001);
-		//logger.debug("après bon virement, operations sur compteDtoB:" + daoOperation.findByAccountNumber(numCptA));
-		//logger.debug("après bon virement, operations sur CompteDtoB:" + daoOperation.findByAccountNumber(numCptB));
-		this.serviceCompteDto.transfer(0.05, numCptA, numCptB); //second virement pour voir plusieurs operations
-		logger.debug("après bon virement, operations sur compteDtoB:" + serviceOperation.searchById(numCptA));
-		logger.debug("après bon virement, operations sur CompteDtoB:" + serviceOperation.searchById(numCptB));
 	}
 
 	@Test
 	public void testMauvaisVirement() {
 		
-		CompteDto compteDtoBSauvegarde = this.serviceCompteDto.saveNew(new CompteDto(null, "compteDtoB", 300.0));
-		CompteDto CompteDtoBSauvegarde = this.serviceCompteDto.saveNew(new CompteDto(null, "CompteDtoB", 100.0));
-		long numCptA = compteDtoBSauvegarde.getNumero();
-		long numCptB = CompteDtoBSauvegarde.getNumero();
+		CompteDto compteDtoASauvegarde = this.serviceCompteDto.saveNew(new CompteDto(null, "compteDtoB", 300.0));
+		CompteDto compteDtoBSauvegarde = this.serviceCompteDto.saveNew(new CompteDto(null, "CompteDtoB", 100.0));
+		long numCptA = compteDtoASauvegarde.getNumero();
+		long numCptB = compteDtoBSauvegarde.getNumero();
 		// remonter en memoire les anciens soldes des CompteDto A et B avant virement
 		// (+affichage console ou logger) :
-		double soldeA_avant = compteDtoBSauvegarde.getSolde();
-		double soldeB_avant = CompteDtoBSauvegarde.getSolde();
+		double soldeA_avant = compteDtoASauvegarde.getSolde();
+		double soldeB_avant = compteDtoBSauvegarde.getSolde();
 		logger.debug("avant mauvais virement, soldeA_avant=" + soldeA_avant + " et soldeB_avant=" + soldeB_avant);
 		// effectuer un virement de 50 euros d'un CompteDto A vers vers CompteDto B
 		try {
@@ -94,10 +89,10 @@ public class TestServiceCompte {
 		}
 		// remonter en memoire les nouveaux soldes des CompteDto A et B apres virement
 		// (+affichage console ou logger)
-		CompteDto compteDtoBReluApresVirement = this.serviceCompteDto.searchById(numCptA);
-		CompteDto CompteDtoBReluApresVirement = this.serviceCompteDto.searchById(numCptB);
-		double soldeA_apres = compteDtoBReluApresVirement.getSolde();
-		double soldeB_apres = CompteDtoBReluApresVirement.getSolde();
+		CompteDto compteDtoAReluApresVirement = this.serviceCompteDto.searchById(numCptA);
+		CompteDto compteDtoBReluApresVirement = this.serviceCompteDto.searchById(numCptB);
+		double soldeA_apres = compteDtoAReluApresVirement.getSolde();
+		double soldeB_apres = compteDtoBReluApresVirement.getSolde();
 		logger.debug("apres mauvais virement, soldeA_apres=" + soldeA_apres + " et soldeB_apres=" + soldeB_apres);
 		// verifier -50 et +50 sur les différences de soldes sur A et B :
 		Assertions.assertEquals(soldeA_avant , soldeA_apres, 0.000001);
@@ -140,26 +135,26 @@ public class TestServiceCompte {
 
 	@Test
 	public void testRechercherCompteDtosDunClient() {
-		CompteDto compteDtoB1Sauvegarde = serviceCompteDto.saveNew(new CompteDto(null, "compteDtoB1", 256.0));
-		CompteDto compteDtoB2Sauvegarde = serviceCompteDto.saveNew(new CompteDto(null, "compteDtoB2", 156.0));
+		CompteDto compteDtoA1Sauvegarde = serviceCompteDto.saveNew(new CompteDto(null, "compteDtoA1", 256.0));
+		CompteDto compteDtoA2Sauvegarde = serviceCompteDto.saveNew(new CompteDto(null, "compteDtoA2", 156.0));
 		ClientDtoEx clientA = new ClientDtoEx(null, "aaa", "HaHa", "12 rue Elle 75001 Paris", "email1");
-		clientA.getComptes().add(compteDtoB1Sauvegarde);
-		clientA.getComptes().add(compteDtoB2Sauvegarde);
+		clientA.getComptes().add(compteDtoA1Sauvegarde);
+		clientA.getComptes().add(compteDtoA2Sauvegarde);
 		clientA = serviceClient.saveNewEx(clientA);
 
-		CompteDto CompteDtoB1Sauvegarde = serviceCompteDto.saveNew(new CompteDto(null, "CompteDtoB1", 236.0));
-		CompteDto CompteDtoB2Sauvegarde = serviceCompteDto.saveNew(new CompteDto(null, "CompteDtoB2", 136.0));
+		CompteDto compteDtoB1Sauvegarde = serviceCompteDto.saveNew(new CompteDto(null, "CompteDtoB1", 236.0));
+		CompteDto compteDtoB2Sauvegarde = serviceCompteDto.saveNew(new CompteDto(null, "CompteDtoB2", 136.0));
 		ClientDtoEx clientB = new ClientDtoEx(null, "bbb", "BeBe", "12 rue Elle 75002 Paris", "email2");
-		clientB.getComptes().add(CompteDtoB1Sauvegarde);
-		clientB.getComptes().add(CompteDtoB2Sauvegarde);
+		clientB.getComptes().add(compteDtoB1Sauvegarde);
+		clientB.getComptes().add(compteDtoB2Sauvegarde);
 		clientB = serviceClient.saveNewEx(clientB);
 
-		List<CompteDto> CompteDtosDuClientA = serviceCompteDto.searchCustomerAccounts(clientA.getNumber());
-		logger.debug("CompteDtosDuClientA=" + CompteDtosDuClientA);
-		Assertions.assertTrue(CompteDtosDuClientA.size() == 2);
+		List<CompteDto> compteDtosDuClientA = serviceCompteDto.searchCustomerAccounts(clientA.getNumero());
+		logger.debug("CompteDtosDuClientA=" + compteDtosDuClientA);
+		Assertions.assertTrue(compteDtosDuClientA.size() == 2);
 
-		List<CompteDto> CompteDtosDuClientB = serviceCompteDto.searchCustomerAccounts(clientB.getNumber());
-		logger.debug("CompteDtosDuClientB=" + CompteDtosDuClientB);
+		List<CompteDto> compteDtosDuClientB = serviceCompteDto.searchCustomerAccounts(clientB.getNumero());
+		logger.debug("CompteDtosDuClientB=" + compteDtosDuClientB);
 	}
 	
 

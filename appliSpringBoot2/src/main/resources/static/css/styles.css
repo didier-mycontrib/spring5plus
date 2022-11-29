@@ -1,0 +1,42 @@
+img {  width : 100%; }
+
+.withBorder {
+  border-color: red; border-style: solid; border-width: 1px;
+}
+
+.defaultSubPart{
+	display : block;
+}
+
+.alternativeSubPart{
+	display : none;
+}
+
+
+tbody tr:nth-child(2n) {
+  color: black;
+  background-color: white;
+}
+
+tbody tr:nth-child(2n+1) {
+  color: white;
+  background-color: black;
+}
+
+thead th {
+  background-color: yellow;
+}
+
+.small-zoom {
+  transform: scale(0.92);
+  transition: 0.6s;
+}
+
+.small-zoom:hover {
+  transform: scale(1);
+  border-width: 4px;
+  border-style: solid;
+  border-color: rgb(42, 11, 180);
+}
+
+.c1 { color : green; }

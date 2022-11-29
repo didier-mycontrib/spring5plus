@@ -57,7 +57,7 @@ public class ClientRestCtrl extends AbstractGenericRestCtrlWithoutMapping<Client
 		else {
 		   // return serviceClientWithDto.searchByLastName(nomClient);
 		   return serviceClientWithDto.searchAll().stream()
-				  .filter((client)->client.getLastName().equals(nomClient))
+				  .filter((client)->client.getNom().equals(nomClient))
 				  .collect(Collectors.toList());
 		}
 	}

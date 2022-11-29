@@ -7,16 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import tp.appliSpring.converter.MyGenericMapper;
-import tp.appliSpring.converter.MyMapper;
 import tp.appliSpring.core.dao.DaoCompte;
 import tp.appliSpring.core.dao.DaoOperation;
-import tp.appliSpring.core.entity.Client;
 import tp.appliSpring.core.entity.Compte;
 import tp.appliSpring.core.entity.Operation;
 import tp.appliSpring.core.exception.NotFoundException;
 import tp.appliSpring.core.exception.SoldeInsuffisantException;
 import tp.appliSpring.core.service.ServiceCompteWithDto;
-import tp.appliSpring.dto.ClientDto;
 import tp.appliSpring.dto.CompteDto;
 import tp.appliSpring.dto.CompteDtoEx;
 
@@ -29,7 +26,6 @@ public class ServiceCompteWithDtoImpl
 	private DaoCompte daoCompte; //for specific methods of this class
 	private DaoOperation daoOperation;
 	
-	private MyMapper myMapper;
 	
 	static IdHelper<CompteDto,Compte,Long> compteIdHelper = new IdHelper<>(){
 		@Override public Long extractEntityId(Compte e) {return e.getNumero();}
@@ -38,11 +34,10 @@ public class ServiceCompteWithDtoImpl
 	};
 	
 	@Autowired
-	public ServiceCompteWithDtoImpl(DaoCompte daoCompte,DaoOperation daoOperation ,MyMapper myMapper) {
+	public ServiceCompteWithDtoImpl(DaoCompte daoCompte,DaoOperation daoOperation ) {
 		super(CompteDto.class, CompteDtoEx.class,Compte.class, daoCompte,compteIdHelper);
 		this.daoCompte=daoCompte;
 		this.daoOperation=daoOperation;
-		this.myMapper=myMapper;
 	}
 
 	@Override
@@ -86,7 +81,7 @@ public class ServiceCompteWithDtoImpl
 	@Override
 	public CompteDtoEx searchCompteWithOperationsById(Long numCompte) {
 		Compte compteEntityWithOperations = daoCompte.findWithOperationsById(numCompte);
-		return myMapper.compteToCompteDtoEx(compteEntityWithOperations);
+		return MyGenericMapper.map(compteEntityWithOperations,CompteDtoEx.class);
 	}
 	
 	@Override

@@ -12,20 +12,24 @@ import lombok.ToString;
 public class ClientDtoEx extends ClientDto {
 	private List<CompteDto> comptes = new ArrayList<>();
 
-	public ClientDtoEx(Long number, String firstName, String lastName, String email, String address) {
-		super(number, firstName, lastName, email, address);
-	}
 	
-	public ClientDtoEx(Long number, String firstName, String lastName, String email, String address,List<CompteDto> comptes) {
-		super(number, firstName, lastName, email, address);
-		this.comptes=comptes;
-	}
 
 	@Override
 	public String toString() {
 		return "ClientDtoEx [comptes=" + comptes + ", toString()=" + super.toString() + "]";
 	}
+
+
+
+	public ClientDtoEx(Long numero, String prenom, String nom, String email, String adresse) {
+		super(numero, prenom, nom, email, adresse);
+	}
 	
+	
+	public ClientDtoEx(Long numero, String prenom, String nom, String email, String adresse,List<CompteDto> comptes) {
+		super(numero, prenom, nom, email, adresse);
+		this.comptes = comptes;
+	}
 	
 	
 	

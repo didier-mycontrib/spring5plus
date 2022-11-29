@@ -39,7 +39,7 @@ public class TestServiceClient {
 		clientXy.getComptes().add(compteX2Sauvegarde);
 		ClientDto clientXySauvegarde= serviceClient.saveNew(clientXy);
 		//ClientDto clientXyRelu = serviceClient.searchById(clientXySauvegarde.getNumber());
-		ClientDtoEx clientXyRelu = serviceClient.searchCustomerWithAccountsById(clientXySauvegarde.getNumber());
+		ClientDtoEx clientXyRelu = serviceClient.searchCustomerWithAccountsById(clientXySauvegarde.getNumero());
 		logger.debug("clientXyRelu="+clientXyRelu.toString());
 		for(CompteDto cpt : clientXyRelu.getComptes()) {
 			logger.debug("\t"+cpt);
@@ -63,22 +63,22 @@ public class TestServiceClient {
 				ClientDto client = new ClientDto(null,"alex","Therieur","2 rue xy 75002 Paris","emailQuiVaBien");
 				ClientDto clientSauvegarde = this.serviceClient.saveNew(client); //INSERT INTO
 				logger.debug("ClientSauvegarde=" + clientSauvegarde);
-				ClientDto clientRelu = this.serviceClient.searchById(clientSauvegarde.getNumber()); 
-				Assertions.assertEquals("alex",clientRelu.getFirstName());
-				Assertions.assertEquals("Therieur",clientRelu.getLastName());
+				ClientDto clientRelu = this.serviceClient.searchById(clientSauvegarde.getNumero()); 
+				Assertions.assertEquals("alex",clientRelu.getPrenom());
+				Assertions.assertEquals("Therieur",clientRelu.getNom());
 				logger.debug("ClientRelu apres insertion=" + clientRelu);
-				clientSauvegarde.setFirstName("alain"); 
+				clientSauvegarde.setPrenom("alain"); 
 				ClientDto clientMisAjour = this.serviceClient.updateExisting(clientSauvegarde); //UPDATE
 				logger.debug("ClientMisAjour=" + clientMisAjour);
-				clientRelu = this.serviceClient.searchById(clientSauvegarde.getNumber());  //SELECT
-				Assertions.assertEquals("alain",clientRelu.getFirstName());
+				clientRelu = this.serviceClient.searchById(clientSauvegarde.getNumero());  //SELECT
+				Assertions.assertEquals("alain",clientRelu.getPrenom());
 				
 				logger.debug("clientRelu apres miseAjour=" + clientRelu);
 				//+supprimer :
-				this.serviceClient.deleteById(clientSauvegarde.getNumber());
+				this.serviceClient.deleteById(clientSauvegarde.getNumero());
 				//verifier bien supprimé (en tentant une relecture qui renvoi null)
 				boolean clientEncoreExistant =
-				 this.serviceClient.existsById(clientSauvegarde.getNumber()); 
+				 this.serviceClient.existsById(clientSauvegarde.getNumero()); 
 				Assertions.assertFalse(clientEncoreExistant);
 			}
 	

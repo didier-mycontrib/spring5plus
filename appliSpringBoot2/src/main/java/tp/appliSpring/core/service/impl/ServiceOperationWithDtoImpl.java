@@ -7,14 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import tp.appliSpring.converter.MyMapper;
+import tp.appliSpring.converter.MyGenericMapper;
 import tp.appliSpring.core.dao.DaoCompte;
 import tp.appliSpring.core.dao.DaoOperation;
-import tp.appliSpring.core.entity.Client;
 import tp.appliSpring.core.entity.Operation;
 import tp.appliSpring.core.service.ServiceOperationWithDto;
-import tp.appliSpring.dto.ClientDto;
-import tp.appliSpring.dto.CompteDto;
 import tp.appliSpring.dto.OperationDto;
 
 @Service
@@ -26,7 +23,6 @@ public class ServiceOperationWithDtoImpl
 	private DaoOperation daoOperation; //for specific methods of this class
 	private DaoCompte daoCompte;//secondary Dao
 	
-	private MyMapper myMapper;
 	
 	static IdHelper<OperationDto,Operation,Long> operationIdHelper = new IdHelper<>(){
 		@Override public Long extractEntityId(Operation e) {return e.getNumOp();}
@@ -35,16 +31,15 @@ public class ServiceOperationWithDtoImpl
 	};
 	
 	@Autowired
-	public ServiceOperationWithDtoImpl(DaoOperation daoOperation,DaoCompte daoCompte , MyMapper myMapper) {
+	public ServiceOperationWithDtoImpl(DaoOperation daoOperation,DaoCompte daoCompte ) {
 		super(OperationDto.class, OperationDto.class,Operation.class, daoOperation,operationIdHelper);
 		this.daoOperation=daoOperation;
 		this.daoCompte=daoCompte;
-		this.myMapper=myMapper;
 	}
 
 	@Override
 	public OperationDto saveNewWithAccountNumber(OperationDto opDto, Long numCompte) {
-		Operation operationEntity = myMapper.operationDtoOperation(opDto);
+		Operation operationEntity = MyGenericMapper.map(opDto,Operation.class);
 		if(operationEntity.getDateOp()==null)
 			operationEntity.setDateOp(new Date());
 		operationEntity.setCompte(daoCompte.findById(numCompte).get());

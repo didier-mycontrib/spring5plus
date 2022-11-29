@@ -72,6 +72,15 @@ public class Operation {
 	}
 
 
+	public Operation(Long numOp, String label, Double montant, Date dateOp) {
+		super();
+		this.numOp = numOp;
+		this.label = label;
+		this.montant = montant;
+		this.dateOp = dateOp;
+	}
+
+
 	
 	
 	

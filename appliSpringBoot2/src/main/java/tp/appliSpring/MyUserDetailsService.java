@@ -45,7 +45,7 @@ public class MyUserDetailsService implements UserDetailsService {
 				ClientDto cli = clientService.searchById(numCli);
 				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 				//password=cli.getPassword(); déjà stocké en base en mode crypté
-				password=passwordEncoder.encode("pwd"+cli.getNumber());//simulation password ici
+				password=passwordEncoder.encode("pwd"+cli.getNumero());//simulation password ici
 			} catch (NumberFormatException e) {
 				//e.printStackTrace();
 				System.err.println(e.getMessage());

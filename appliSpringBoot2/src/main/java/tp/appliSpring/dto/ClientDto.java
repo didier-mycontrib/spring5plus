@@ -12,18 +12,18 @@ import lombok.ToString;
 // dto.Customer --> entity.Client
 @Getter @Setter @ToString @NoArgsConstructor
 public class ClientDto {
-   private Long number;
-   private String firstName;
-   private String lastName;
+   private Long numero;
+   private String prenom;
+   private String nom;
    private String email;
-   private String address;
+   private String adresse;
    
-	public ClientDto(Long number, String firstName, String lastName, String email, String address) {
+   public ClientDto(Long numero, String prenom, String nom, String email, String adresse) {
 		super();
-		this.number = number;
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.numero = numero;
+		this.prenom = prenom;
+		this.nom = nom;
 		this.email = email;
-		this.address = address;
-	}
+		this.adresse = adresse;
+   }
 }
