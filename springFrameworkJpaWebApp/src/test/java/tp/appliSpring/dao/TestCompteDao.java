@@ -25,8 +25,8 @@ public class TestCompteDao {
 	
 	@Autowired
 	//@Qualifier("simu")
-	//@Qualifier("jdbc")
-	@Qualifier("jpa")
+	@Qualifier("jdbc")
+	//@Qualifier("jpa")
 	private DaoCompte daoCompte; //à tester
 	
 

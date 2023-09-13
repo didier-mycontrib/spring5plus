@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -58,10 +60,20 @@ public class DomainAndPersistenceConfig {
 	} 
 	
 	// Transaction Manager for JPA or ...
+	@Primary
 	@Bean(name = "transactionManager") 
 	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
 		JpaTransactionManager txManager = new JpaTransactionManager();
 		txManager.setEntityManagerFactory(entityManagerFactory);
+		return txManager;
+	}
+	
+	// Transaction Manager for JDBC or ...
+	@Bean(name = "transactionManagerJdbc") 
+	public PlatformTransactionManager transactionManagerJdbc(DataSource dataSource) {
+		JdbcTransactionManager txManager = new JdbcTransactionManager();
+		//DataSourceTransactionManager txManager = new DataSourceTransactionManager();
+		txManager.setDataSource(dataSource);
 		return txManager;
 	}
 

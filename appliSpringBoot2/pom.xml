@@ -51,23 +51,28 @@
 			<artifactId>spring-security-core</artifactId>
 			<version>${spring.security.version}</version>
 		</dependency>
+		
 		<!--
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		-->
+		
 		<!-- 
 		ATTENTION: si spring-boot-starter-security , 
 		securité par défaut éventuellement bloquante (si pas configurée)
+		default username = "user" , 
+		default password = généré aléatoirement et affiché dans console au demarrage
 		-->
 
-
+     
 		<dependency>
 			<groupId>org.mycontrib</groupId>
 			<artifactId>my-security-starter</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		
 
 		<!-- 
 		ATTENTION: si my-security-starter , 

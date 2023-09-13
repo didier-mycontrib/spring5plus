@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller 
 
-@RequestMapping("/app")
+@RequestMapping("/site/app")
 public class AppCtrl {
 	
 	@ModelAttribute("idSession")

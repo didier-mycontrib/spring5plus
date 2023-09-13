@@ -29,7 +29,7 @@ import tp.appliSpring.dto.VirementDto;
 @CrossOrigin(origins = "*")
 //@CrossOrigin(origins = { "http://localhost:4200" , "http://www.partenaire-particulier.com" })
 //@CrossOrigin(origins = "*" , methods = { RequestMethod.GET , RequestMethod.POST , RequestMethod.PUT , RequestMethod.DELETE , RequestMethod.OPTIONS})
-@RequestMapping(value = "/bank-api/compte", headers = "Accept=application/json")
+@RequestMapping(value = "/rest/bank-api/compte", headers = "Accept=application/json")
 public class CompteRestCtrl extends AbstractGenericRestCtrl<CompteDto,CompteDtoEx,Long>{
 
 	private ServiceCompteWithDto serviceCompteWithDto;
@@ -42,25 +42,25 @@ public class CompteRestCtrl extends AbstractGenericRestCtrl<CompteDto,CompteDtoE
 
 	/* points d'entrées hérités de AbstractGenericRestCtrl:
     ******************************************************
-	GET http://localhost:8080/appliSpringBoot/bank-api/compte/1
+	GET http://localhost:8080/appliSpringBoot/rest/bank-api/compte/1
 	
-	POST http://localhost:8080/appliSpringBoot/bank-api/compte
+	POST http://localhost:8080/appliSpringBoot/rest/bank-api/compte
 	à appeler en mode POST avec le corps de la requête HTTP comportant
 	{ "numero" : null , "label" : "compteQuiVaBien" , "solde" : 50 }
 	
-	PUT http://localhost:8080/appliSpringBoot/bank-api/compte
+	PUT http://localhost:8080/appliSpringBoot/rest/bank-api/compte
 	à appeler en mode PUT avec le corps de la requête HTTP comportant
 	{ "numero" : 5 , "label" : "compteQuiVaEncoreBien" , "solde" : 150 }
 	
-	DELETE http://localhost:8080/appliSpringBoot/bank-api/compte/3
+	DELETE http://localhost:8080/appliSpringBoot/rest/bank-api/compte/3
 	 
 	*/
 
-	// URL= http://localhost:8080/appliSpringBoot/bank-api/compte
-	// ou http://localhost:8080/appliSpringBoot/bank-api/compte?numClient=1
-	// ou http://localhost:8080/appliSpringBoot/bank-api/compte?soldeMini=50
+	// URL= http://localhost:8080/appliSpringBoot/rest/bank-api/compte
+	// ou http://localhost:8080/appliSpringBoot/rest/bank-api/compte?numClient=1
+	// ou http://localhost:8080/appliSpringBoot/rest/bank-api/compte?soldeMini=50
 	// ou
-	// http://localhost:8080/appliSpringBoot/bank-api/compte?numClient=1&soldeMini=50
+	// http://localhost:8080/appliSpringBoot/rest/bank-api/compte?numClient=1&soldeMini=50
 	@GetMapping("")
 	public List<CompteDto> getComptesByCriteria(@RequestParam(name = "numClient", required = false) Long numClient,
 			@RequestParam(name = "soldeMini", required = false) Double soldeMini) {
@@ -79,14 +79,14 @@ public class CompteRestCtrl extends AbstractGenericRestCtrl<CompteDto,CompteDtoE
 	}
 
 	
-	// URL= http://localhost:8080/appliSpringBoot/bank-api/compte/withDetails/1_or_other_id
+	// URL= http://localhost:8080/appliSpringBoot/rest/bank-api/compte/withDetails/1_or_other_id
 	@GetMapping("/withDetails/{id}")
 	public CompteDto getDtoByIdWithDetails(@PathVariable("id") Long id) throws NotFoundException {
 		return serviceCompteWithDto.searchCompteWithOperationsById(id);
 	}
 
 
-	// URL= http://localhost:8080/appliSpringBoot/bank-api/compte/virement
+	// URL= http://localhost:8080/appliSpringBoot/rest/bank-api/compte/virement
 	// appelé en mode POST avec le corps de la requête HTTP comportant
 	// { "montant" : 50.0 , "numCptDeb" : "1" , "numCptCred" : "2" }
 	@PostMapping("virement")

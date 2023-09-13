@@ -11,7 +11,7 @@ public class AppliSpringBootApplication {
 		//SpringApplication.run(AppliSpringBootApplication.class, args);
 		SpringApplication app = new SpringApplication(AppliSpringBootApplication.class);
 		//app.setAdditionalProfiles("dev"); // "dev" , "logPerf"
-		app.setAdditionalProfiles("dev","withSecurity");
+		app.setAdditionalProfiles("dev","withSecurity"); 
 		//app.setAdditionalProfiles("prod");
 		ConfigurableApplicationContext context = app.run(args);
 		//context.getBean("...")

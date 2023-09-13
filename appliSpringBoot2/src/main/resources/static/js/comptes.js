@@ -1,6 +1,6 @@
 function searchComptes(){
 	let numClient = document.getElementById("txtNumClient").value;
-	let wsUrl = "./bank-api/compte?numClient="+numClient;
+	let wsUrl = "./rest/bank-api/compte?numClient="+numClient;
 	makeAjaxGetRequest(wsUrl , (jsonResponse) => {
 		document.getElementById("spanRes").innerHTML=jsonResponse;
 		let jsComptes = JSON.parse(jsonResponse);

@@ -27,7 +27,7 @@ import tp.appliSpring.dto.Message;
 @CrossOrigin(origins = "*")
 //@CrossOrigin(origins = { "http://localhost:4200" , "http://www.partenaire-particulier.com" })
 //@CrossOrigin(origins = "*" , methods = { RequestMethod.GET , RequestMethod.POST , RequestMethod.PUT , RequestMethod.DELETE , RequestMethod.OPTIONS})
-@RequestMapping(value="/bank-api/client" , headers="Accept=application/json")
+@RequestMapping(value="/rest/bank-api/client" , headers="Accept=application/json")
 public class ClientRestCtrl extends AbstractGenericRestCtrlWithoutMapping<ClientDto,ClientDtoEx,Long> {
 	
 	
@@ -39,7 +39,7 @@ public class ClientRestCtrl extends AbstractGenericRestCtrlWithoutMapping<Client
 		this.serviceClientWithDto = serviceClientWithDto;
 	}
 	
-	//URL= http://localhost:8080/appliSpringBoot/bank-api/client/1
+	//URL= http://localhost:8080/appliSpringBoot/rest/bank-api/client/1
 	@GetMapping("/{numClient}")
 	public ClientDto getCustomerByNum(@PathVariable("numClient") Long numClient) {
 			return super.getDtoById(numClient);
@@ -47,8 +47,8 @@ public class ClientRestCtrl extends AbstractGenericRestCtrlWithoutMapping<Client
 	
 	
 	
-	//URL= http://localhost:8080/appliSpringBoot/bank-api/client
-	//ou   http://localhost:8080/appliSpringBoot/bank-api/client?nom=Therieur
+	//URL= http://localhost:8080/appliSpringBoot/rest/bank-api/client
+	//ou   http://localhost:8080/appliSpringBoot/rest/bank-api/client?nom=Therieur
 	@GetMapping("")
 	public List<ClientDto> getCustomersByCriteria(
 			@RequestParam(name="nom" , required=false)String nomClient){
@@ -63,7 +63,7 @@ public class ClientRestCtrl extends AbstractGenericRestCtrlWithoutMapping<Client
 	}
 	
 	
-	//URL= http://localhost:8080/appliSpringBoot/bank-api/client
+	//URL= http://localhost:8080/appliSpringBoot/rest/bank-api/client
 	//appelé en mode POST avec le corps de la requête HTTP comportant
 	// { "number" : null , "firstName" :  "jean" , "lastName" : "Bon" , "address" : "12 rue Xy Paris" , "email" : "jean.Bon@gmail.com"}
 	@PostMapping("") 
@@ -72,7 +72,7 @@ public class ClientRestCtrl extends AbstractGenericRestCtrlWithoutMapping<Client
 		return super.postDto(clientDto);
 	}
 	
-	//URL= http://localhost:8080/appliSpringBoot/bank-api/client
+	//URL= http://localhost:8080/appliSpringBoot/rest/bank-api/client
 	//appelé en mode PUT avec le corps de la requête HTTP comportant
 	// { "number" : 4 , "firstName" :  "jean2" , "lastName" : "Bon" , "address" : "13 rue Xy Paris" , "email" : "jean.Bon@gmail.com"}
 	@PutMapping("") 
@@ -80,7 +80,7 @@ public class ClientRestCtrl extends AbstractGenericRestCtrlWithoutMapping<Client
 		return super.putDto(clientDto);
 	}
 	
-	//URL= http://localhost:8080/appliSpringBoot/bank-api/client/3
+	//URL= http://localhost:8080/appliSpringBoot/rest/bank-api/client/3
 	//appelé en mode delete
 	@DeleteMapping("/{numClient}")
 	public ResponseEntity<Message> deleteCustomerByNum(@PathVariable("numClient") Long numClient) {

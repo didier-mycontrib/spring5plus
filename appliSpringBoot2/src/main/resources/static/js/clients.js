@@ -1,4 +1,4 @@
-sessionStorage.setItem("token",null);
+sessionStorage.setItem("authToken",null);
 
 function parseJwt (token) {
     let base64Url = token.split('.')[1];
@@ -21,8 +21,8 @@ function onSearchClient() {
 	let zoneNumClient = document.getElementById("txtNumClient");
 	let numClient = zoneNumClient.value;
 	console.log("numClient=" + numClient);
-	var urlWsGet = "./bank-api/client/" + numClient;
-	makeAjaxGetRequest(urlWsGet, traiterReponse); //non bloquant (asynchrone)
+	var urlWsGet = "./rest/bank-api/client/" + numClient;
+	makeAjaxGetRequest(urlWsGet, traiterReponse ); //non bloquant (asynchrone)
 	//....
 }
 
@@ -33,7 +33,7 @@ function doAjout(){
 	var adresse = document.getElementById("txtAdresse").value;
 	var email = document.getElementById("txtEmail").value;
 	
-	var url = "./bank-api/client"
+	var url = "./rest/bank-api/client"
 
     var callback = function(data){
 	   console.log("success data=" + data);
@@ -50,9 +50,8 @@ function doAjout(){
     var jsCustomerObject = { prenom : prenom , nom : nom , adresse : adresse , email : email };
     var jsonData = JSON.stringify(jsCustomerObject);
 
-    var token = sessionStorage.getItem("token");
-    makeAjaxPostRequest(url,jsonData,callback,errCallback,token) ;
-	//makeAjaxPostRequest(url,jsonData,callback,errCallback,tokenGlobal) ;
+    makeAjaxPostRequest(url,jsonData,callback,errCallback) ;
+
 	
 }
 
@@ -62,13 +61,13 @@ function doLogin(){
 	var password = document.getElementById("txtPassword").value;
 
 	
-	var url = "./api-login/public/login"
+	var url = "./rest/api-login/public/login"
 
     var callback = function(data){
 	   console.log("success data=" + data);
        var jwtToken = (JSON.parse(data)).token;
        //tokenGlobal=jwtToken;
-       sessionStorage.setItem("token",jwtToken);
+       sessionStorage.setItem("authToken",jwtToken);
        var message ="reponse login=" + data + " payload token=" + parseJwt(jwtToken);
        document.getElementById("spanMessageLogin").innerHTML="<b>"+message+"</b>";
     }
@@ -76,7 +75,7 @@ function doLogin(){
     var errCallback = function(data){
 	   console.log("erreur=" + data);
        var message = (JSON.parse(data)).message;
-       sessionStorage.setItem("token",null);
+       sessionStorage.setItem("authToken",null);
        document.getElementById("spanMessageLogin").innerHTML="<b>"+message+"</b>";
     }
 

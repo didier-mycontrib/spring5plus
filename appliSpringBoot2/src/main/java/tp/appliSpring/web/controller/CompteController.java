@@ -22,7 +22,7 @@ import tp.appliSpring.dto.CompteDto;
 import tp.appliSpring.web.form.VirementForm;
 
 @Controller //composant spring de type Crontroller spring-mvc
-@RequestMapping("/compte")
+@RequestMapping("/site/compte")
 @SessionAttributes( value={"client", "comptes"} )
 //noms des "modelAttributes" qui sont EN PLUS récupérés/stockés
 // en SESSION HTTP au niveau de la page de rendu 

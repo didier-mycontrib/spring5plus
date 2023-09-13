@@ -14,9 +14,12 @@ import tp.appliSpring.core.entity.Compte;
 import tp.appliSpring.core.exception.SoldeInsuffisantException;
 
 @Service //classe de Service prise en charge par spring
+@Transactional() //avec primary transactionManager (for jpa)
+//@Transactional(transactionManager = "transactionManagerJdbc")//pour DAO en version jdbc
 public class ServiceCompteImpl implements ServiceCompte{
 	
 	@Qualifier("jpa")
+	//@Qualifier("jdbc")
 	@Autowired //injection de dépendance par annotation
 	           //daoCompte sera initialisée par Spring pour
 	           //référencer un composant existant compatible 
@@ -66,7 +69,7 @@ public class ServiceCompteImpl implements ServiceCompte{
 		
 	}
 
-	@Transactional(/*propagation = Propagation.REQUIRED*/) //REQUIRED par defaut
+	//@Transactional(/*propagation = Propagation.REQUIRED*/) //REQUIRED par defaut
 	public void transferer(double montant, long numCptDeb, long numCptCred) {
 		try {
 			// transaction globale initialisée dès le début de l'exécution de effectuerVirement
@@ -77,14 +80,14 @@ public class ServiceCompteImpl implements ServiceCompte{
 				throw new SoldeInsuffisantException("compte a débiter qui a un solde insuffisant : " + cptDeb);
 			
 			cptDeb.setSolde(cptDeb.getSolde() - montant);
-			//this.daoCompte.save(cptDeb); //appel de .save() possible et dans ce cas base modifiée temporairement seulement
+			this.daoCompte.save(cptDeb); //appel de .save() possible et dans ce cas base modifiée temporairement seulement
 			                               //avec rollback ultérieur possible en cas d'exception
 			
 			
 			//idem pour compte à créditer
 			Compte cptCred= this.daoCompte.findById(numCptCred);
 			cptCred.setSolde(cptCred.getSolde() + montant);
-			//this.daoCompte.save(cptCred)
+			this.daoCompte.save(cptCred); //NB: .save() absolument nécessaire en mode jdbc, facultatif en mode jpa/etat persistant
 
 			
 			//en fin de transaction réussie (sans exception) , toutes les modification effectuées sur les objets
