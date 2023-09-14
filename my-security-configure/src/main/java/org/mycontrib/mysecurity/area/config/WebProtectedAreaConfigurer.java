@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 
 import org.mycontrib.mysecurity.area.properties.MySecurityAreaProperties;
 import org.mycontrib.mysecurity.area.properties.MySecurityAreasProperties;
+import org.mycontrib.mysecurity.common.MySecurityExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class WebProtectedAreaConfigurer {
 	private void loadAreasConfigFromAreasProperties(AreasConfig areasConfig) {
 		if(mySecurityProperties == null) return;
 		loadAreaConfigFromAreaProperties(areasConfig.getRest(),mySecurityProperties.getRest());
-		loadAreaConfigFromAreaProperties(areasConfig.getSite(),mySecurityProperties.getRest());
+		loadAreaConfigFromAreaProperties(areasConfig.getSite(),mySecurityProperties.getSite());
 		loadAreaConfigFromAreaProperties(areasConfig.getOther(),mySecurityProperties.getOther());
 		loadAreaConfigFromAreaProperties(areasConfig.getTools(),mySecurityProperties.getTools());
 	}
@@ -56,33 +57,14 @@ public class WebProtectedAreaConfigurer {
 		
 		AreasConfig areasConfig = new AreasConfig();
 		loadAreasConfigFromAreasProperties(areasConfig);//load areas configs from .properties
-
-		String[] defaultStaticWhitelist = { "/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg",
-				"/**/*.html", "/**/*.css", "/**/*.js" }; // default value
 		
-		String[] defaultApiWhitelist = { "/rest/my-api/public/**" }; // default value
-		
-		String[] defaultToolsWhitelist = { "/swagger-ui/**","/v3/api-docs" ,"/h2-console/**"}; 
-		
-		String[] defaultApiReadonlyWhitelist = { "/rest/my-api/readonly/**" }; // default value
-		
-		String[] defaultApiProtectedlist = { "/rest/my-api/private/**" }; // default value
+		//String[] exempleApiWhitelist = { "/rest/my-api/public/**" }; // default value
+		//String[] exempleToolsWhitelist = { "/swagger-ui/**","/v3/api-docs" ,"/h2-console/**"}; 
+		//String[] exempleApiReadonlyWhitelist = { "/rest/my-api/readonly/**" }; // default value
+		//String[] exampleApiProtectedlist = { "/rest/my-api/private/**" }; // default value
 		
 		if(areasConfig.getOther().getWhitelist().length==0)
-			areasConfig.getOther().setWhitelist(defaultStaticWhitelist);
-		
-		if(areasConfig.getTools().getWhitelist().length==0)
-			areasConfig.getTools().setWhitelist(defaultToolsWhitelist);
-		
-		if(areasConfig.getRest().getWhitelist().length==0)
-			areasConfig.getRest().setWhitelist(defaultApiWhitelist);
-		
-		if(areasConfig.getRest().getReadonlylist().length==0)
-			areasConfig.getRest().setReadonlylist(defaultApiReadonlyWhitelist);
-		
-		if(areasConfig.getRest().getProtectedlist().length==0)
-			areasConfig.getRest().setProtectedlist(defaultApiProtectedlist);
-	
+			areasConfig.getOther().setWhitelist(MySecurityExtension.DEFAULT_STATIC_WHITELIST);
 		
 		//Readaptation de ApiProtectedlist :
 		//toute url de ApiReadonlyWhitelist doit normalement être également placée

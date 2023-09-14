@@ -3,6 +3,9 @@ package org.mycontrib.mysecurity.common;
 public interface MySecurityExtension {
 	public static final String MY_SECURITY_DEFAULT_LOGIN_PATH="/rest/api-login/public/login";
 	
+	public static final String[] DEFAULT_STATIC_WHITELIST = { "/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg",
+			"/**/*.html", "/**/*.css", "/**/*.js" }; 
+	
 	//partie de l'url devant mener à une api REST (ex: /rest/api-xyz/xyz)
 	public static final String REST_PART_URI="/rest";
 	

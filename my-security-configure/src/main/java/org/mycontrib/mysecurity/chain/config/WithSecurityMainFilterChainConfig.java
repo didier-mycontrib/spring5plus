@@ -111,6 +111,7 @@ public class WithSecurityMainFilterChainConfig {
 		    		 authorizeRequests -> addPermissionsFromAreaConfig(
 		    		      authorizeRequests.antMatchers(HttpMethod.POST, "/rest/api-login/public/login").permitAll() 
 		    		      , areasConfig.getRest())
+		    		      .antMatchers( "/rest/**").authenticated() //by default for other (unknown) rest-api
 		    		 )
 				.cors() // enable CORS (avec @CrossOrigin sur class @RestController)
 				.and().csrf().disable();
@@ -156,11 +157,9 @@ public class WithSecurityMainFilterChainConfig {
 		      .authorizeRequests(
 			    		 authorizeRequests -> addPermissionsFromAreaConfig(
 			    		      authorizeRequests.antMatchers( "/site/login").permitAll()
-			  		                           .antMatchers( "/site/logout").permitAll() 
-			  		                         //.antMatchers( "/site/**").permitAll()
-			  		                         //.antMatchers( "/site/**").authenticated()
-			  		         				 //.antMatchers( "/site/**").denyAll()
+			  		                           .antMatchers( "/site/logout").permitAll() 			  		                   
 			    		      ,areasConfig.getSite())
+	                         .antMatchers( "/site/**").authenticated() //by default for other site parts
 			    		 )
 				.formLogin().loginPage("/site/login")
 		        .and().csrf()
@@ -186,6 +185,7 @@ public class WithSecurityMainFilterChainConfig {
 				    		 authorizeRequests -> addPermissionsFromAreaConfig(
 				    				                  addPermissionsFromAreaConfig(authorizeRequests,areasConfig.getTools()),
 				    				                  areasConfig.getOther())
+				    		                      .antMatchers( "/**").authenticated() //by default for others of others
 				    		 )
 		        //.headers().frameOptions().disable() //ok for h2-console
 		        .headers().frameOptions().sameOrigin() //ok for h2-console

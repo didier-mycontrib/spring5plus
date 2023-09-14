@@ -55,6 +55,7 @@ public class CompteController {
 	
 	@RequestMapping("/verifLogin")
 	 public String verifLogin(Model model,@RequestParam(name="numClient")  Long numClient) {
+		System.out.println("/site/compte/verifLogin with numClient="+numClient);
 		List<CompteDto> comptes = serviceCompte.searchCustomerAccounts(numClient);
 		ClientDto client = serviceClient.searchById(numClient);
 	    model.addAttribute("client", client);

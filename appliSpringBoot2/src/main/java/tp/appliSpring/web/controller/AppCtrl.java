@@ -39,6 +39,7 @@ public class AppCtrl {
 	
 	@RequestMapping("/to-login")
 	String toLogin(Model model) {
+		System.out.println("/site/app/to-login");
 		model.addAttribute("title","login");
 	    return "login"; //login.jsp ou ... dans src/main/resources/META-INF/resources/jsp ou ailleurs
 	}
