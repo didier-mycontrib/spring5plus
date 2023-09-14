@@ -2,43 +2,54 @@ package org.mycontrib.mysecurity.area.config;
 
 //Web Protected Area Config as arrays
 public class AreasConfig {
-	private String[] staticWhitelist; 
-	private String[] apiWhitelist ;
-	private String[] apiReadonlyWhitelist ; 
-	private String[] apiProtectedlist;
-	private String[] toolsWhitelist; //h2-console , swagger, ...
+	private AreaConfig rest;
+	private AreaConfig site;
+	private AreaConfig other;
+	private AreaConfig tools;
 	
-	public String[] getStaticWhitelist() {
-		return staticWhitelist;
+	public AreasConfig() {
+		super();
+		rest=new AreaConfig();
+		site=new AreaConfig();
+		other=new AreaConfig();
+		tools=new AreaConfig();
 	}
-	public void setStaticWhitelist(String[] staticWhitelist) {
-		this.staticWhitelist = staticWhitelist;
-	}
-	public String[] getApiWhitelist() {
-		return apiWhitelist;
-	}
-	public void setApiWhitelist(String[] apiWhitelist) {
-		this.apiWhitelist = apiWhitelist;
-	}
-	public String[] getApiReadonlyWhitelist() {
-		return apiReadonlyWhitelist;
-	}
-	public void setApiReadonlyWhitelist(String[] apiReadonlyWhitelist) {
-		this.apiReadonlyWhitelist = apiReadonlyWhitelist;
-	}
-	public String[] getApiProtectedlist() {
-		return apiProtectedlist;
-	}
-	public void setApiProtectedlist(String[] apiProtectedlist) {
-		this.apiProtectedlist = apiProtectedlist;
-	}
-	public String[] getToolsWhitelist() {
-		return toolsWhitelist;
-	}
-	public void setToolsWhitelist(String[] toolsWhitelist) {
-		this.toolsWhitelist = toolsWhitelist;
-	}
-	
-	
 
+	@Override
+	public String toString() {
+		return "AreasConfig [rest=" + rest + ",\n site=" + site + ",\n other=" + other + ",\n tools=" + tools + "]\n";
+	}
+
+	public AreaConfig getRest() {
+		return rest;
+	}
+
+	public void setRest(AreaConfig rest) {
+		this.rest = rest;
+	}
+
+	public AreaConfig getSite() {
+		return site;
+	}
+
+	public void setSite(AreaConfig site) {
+		this.site = site;
+	}
+
+	public AreaConfig getOther() {
+		return other;
+	}
+
+	public void setOther(AreaConfig other) {
+		this.other = other;
+	}
+
+	public AreaConfig getTools() {
+		return tools;
+	}
+
+	public void setTools(AreaConfig tools) {
+		this.tools = tools;
+	}
+	
 }

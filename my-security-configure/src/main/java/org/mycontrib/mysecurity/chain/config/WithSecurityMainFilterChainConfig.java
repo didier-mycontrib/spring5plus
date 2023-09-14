@@ -1,5 +1,6 @@
 package org.mycontrib.mysecurity.chain.config;
 
+import org.mycontrib.mysecurity.area.config.AreaConfig;
 import org.mycontrib.mysecurity.area.config.AreasConfig;
 import org.mycontrib.mysecurity.chain.properties.MySecurityChainProperties;
 import org.mycontrib.mysecurity.common.MyFilterChainSimpleConfigurer;
@@ -20,8 +21,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -54,6 +54,37 @@ public class WithSecurityMainFilterChainConfig {
 	@Autowired(required = false)
 	MyRealmConfigurer myRealmConfigurer;
 	
+	/*
+	 public static AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry 
+        addPermissions(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorizeRequests,
+  		               AreaConfig areaConfig) {
+	 */
+	
+	public static ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry 
+        addPermissionsFromAreaConfig(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authorizeRequests,
+  		               AreaConfig areaConfig) {
+		
+		ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authorizeRequestsWithPermissions = authorizeRequests;
+		
+		if(areaConfig.getWhitelist().length>0)
+			authorizeRequestsWithPermissions = authorizeRequestsWithPermissions
+			.antMatchers(areaConfig.getWhitelist()).permitAll();
+		
+		if(areaConfig.getBlacklist().length>0)
+			authorizeRequestsWithPermissions = authorizeRequestsWithPermissions
+			.antMatchers(areaConfig.getBlacklist()).denyAll();
+		
+		if(areaConfig.getReadonlylist().length>0)
+			authorizeRequestsWithPermissions = authorizeRequestsWithPermissions
+			.antMatchers(HttpMethod.GET, areaConfig.getReadonlylist()).permitAll();
+		
+		if(areaConfig.getProtectedlist().length>0)
+			authorizeRequestsWithPermissions = authorizeRequestsWithPermissions
+			.antMatchers(areaConfig.getProtectedlist()).authenticated();
+		
+		return authorizeRequestsWithPermissions;
+	}
+	
 	
 	//NB: 3 securityChain avec ordre important à respecter
 	//@Order(1) pour les URL commencant par /rest (ex: /rest/api-xxx , /rest/api-yyy)
@@ -66,6 +97,9 @@ public class WithSecurityMainFilterChainConfig {
 	//conventions d'URL : /rest/api-xyz/... ou /site/... ou **
 	
 	
+	
+	
+	
 	@Bean
     @Order(1)
 	protected SecurityFilterChain restApiFilterChain(HttpSecurity http)
@@ -73,14 +107,12 @@ public class WithSecurityMainFilterChainConfig {
 
 		HttpSecurity partialConfiguredHttp =
 		     http.antMatcher("/rest/**") //VERY IMPORTANT (matching for rest api and @Order(1) FilterChain)
-		     .authorizeRequests()
-		        /*.antMatchers(areasConfig.getStaticWhitelist()).permitAll()
-		        .antMatchers(areasConfig.getSwaggerWhitelist()).permitAll()*/
-		        .antMatchers(HttpMethod.POST, "/rest/api-login/public/login").permitAll()
-				.antMatchers(areasConfig.getApiWhitelist()).permitAll()
-				.antMatchers(HttpMethod.GET, areasConfig.getApiReadonlyWhitelist()).permitAll()
-				.antMatchers(areasConfig.getApiProtectedlist()).authenticated()
-				.and().cors() // enable CORS (avec @CrossOrigin sur class @RestController)
+		     .authorizeRequests(
+		    		 authorizeRequests -> addPermissionsFromAreaConfig(
+		    		      authorizeRequests.antMatchers(HttpMethod.POST, "/rest/api-login/public/login").permitAll() 
+		    		      , areasConfig.getRest())
+		    		 )
+				.cors() // enable CORS (avec @CrossOrigin sur class @RestController)
 				.and().csrf().disable();
 
 		partialConfiguredHttp = withSpecificAuthenticationManagerIfNotNull(partialConfiguredHttp,RealmPurposeEnum.rest);
@@ -120,15 +152,17 @@ public class WithSecurityMainFilterChainConfig {
 
 	
 		http=http
-		      .antMatcher("/site/**") //VERY IMPORTANT (matching for spring mvc site part and @Order(2) FilterChain)
-		      .authorizeRequests()
-		        //.antMatchers( "/site/**").permitAll()
-		        .antMatchers( "/site/login").permitAll()
-		        .antMatchers( "/site/logout").permitAll()
-				.antMatchers( "/site/**").authenticated()
-				//.antMatchers( "/site/**").denyAll()
-				.and().formLogin().loginPage("/site/login")
-				
+		      .antMatcher("/site/**") //VERY IMPORTANT (matching for spring mvc site part and @Order(2) FilterChain
+		      .authorizeRequests(
+			    		 authorizeRequests -> addPermissionsFromAreaConfig(
+			    		      authorizeRequests.antMatchers( "/site/login").permitAll()
+			  		                           .antMatchers( "/site/logout").permitAll() 
+			  		                         //.antMatchers( "/site/**").permitAll()
+			  		                         //.antMatchers( "/site/**").authenticated()
+			  		         				 //.antMatchers( "/site/**").denyAll()
+			    		      ,areasConfig.getSite())
+			    		 )
+				.formLogin().loginPage("/site/login")
 		        .and().csrf()
 		        .and().cors().disable();
 		
@@ -148,11 +182,13 @@ public class WithSecurityMainFilterChainConfig {
 			throws Exception {
 
 		http=http.antMatcher("/**") //VERY IMPORTANT (matching for all other parts (static, ...) and @Order(3) FilterChain)
-		        .authorizeRequests()
-		        .antMatchers(areasConfig.getStaticWhitelist()).permitAll()
-		        .antMatchers(areasConfig.getToolsWhitelist()).permitAll()
-		        //.and().headers().frameOptions().disable() //ok for h2-console
-		        .and().headers().frameOptions().sameOrigin() //ok for h2-console
+				  .authorizeRequests(
+				    		 authorizeRequests -> addPermissionsFromAreaConfig(
+				    				                  addPermissionsFromAreaConfig(authorizeRequests,areasConfig.getTools()),
+				    				                  areasConfig.getOther())
+				    		 )
+		        //.headers().frameOptions().disable() //ok for h2-console
+		        .headers().frameOptions().sameOrigin() //ok for h2-console
 		        .and().csrf().disable();//ok for h2-console
 		return http.build();
 			
