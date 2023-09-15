@@ -1,6 +1,6 @@
 package org.mycontrib.mysecurity.standalone.rest;
 
-import org.mycontrib.mysecurity.common.MySecurityExtension;
+import org.mycontrib.mysecurity.common.extension.MySecurityExtension;
 import org.mycontrib.mysecurity.jwt.util.JwtTokenProvider;
 import org.mycontrib.mysecurity.standalone.dto.LoginRequest;
 import org.mycontrib.mysecurity.standalone.dto.LoginResponse;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin("*")
 @Profile("withSecurity")
-@RequestMapping(value=MySecurityExtension.MY_SECURITY_DEFAULT_LOGIN_PATH , headers="Accept=application/json")
+@RequestMapping(value=MySecurityExtension.DEFAULT_REST_STANDALONE_LOGIN_PATH , headers="Accept=application/json")
 public class LoginRestCtrl {
 	
 	Logger logger = LoggerFactory.getLogger(LoginRestCtrl.class);

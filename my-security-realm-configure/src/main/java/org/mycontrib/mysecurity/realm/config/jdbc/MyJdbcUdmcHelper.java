@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 
 import javax.sql.DataSource;
 
-import org.mycontrib.mysecurity.realm.config.default_users.MySecurityDefaultUsersSimpleConfigurer;
+import org.mycontrib.mysecurity.common.extension.MySecurityDefaultUsersSimpleConfigurer;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

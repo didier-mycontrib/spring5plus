@@ -8,6 +8,6 @@
 	<form action="../compte/verifLogin" method="POST">
 	    numClient : <input name="numClient" type="text" /> <br/>
 	    <input  type="submit" value="identification client banque" /> <br/>
-	    <input type="hidden"   name="${_csrf.parameterName}"      value="${_csrf.token}"/>
+	    <input type="hidden"   th:name="${_csrf.parameterName}"      th:value="${_csrf.token}"/>
 	</form>
 </div>   

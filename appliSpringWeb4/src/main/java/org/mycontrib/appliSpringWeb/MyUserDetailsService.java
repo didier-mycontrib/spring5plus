@@ -6,7 +6,7 @@ import java.util.List;
 import org.mycontrib.appliSpringWeb.entity.Customer;
 import org.mycontrib.appliSpringWeb.service.ServiceCompteImpl;
 import org.mycontrib.appliSpringWeb.service.ServiceCustomer;
-import org.mycontrib.mysecurity.common.MySecurityExtension;
+import org.mycontrib.mysecurity.common.extension.MySecurityExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,6 +6,7 @@ import org.mycontrib.mysecurity.chain.properties.MySecurityChainProperties;
 import org.mycontrib.mysecurity.common.MyFilterChainSimpleConfigurer;
 import org.mycontrib.mysecurity.common.MyRealmConfigurer;
 import org.mycontrib.mysecurity.common.RealmPurposeEnum;
+import org.mycontrib.mysecurity.common.extension.MySecurityExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,9 +110,9 @@ public class WithSecurityMainFilterChainConfig {
 		     http.antMatcher("/rest/**") //VERY IMPORTANT (matching for rest api and @Order(1) FilterChain)
 		     .authorizeRequests(
 		    		 authorizeRequests -> addPermissionsFromAreaConfig(
-		    		      authorizeRequests.antMatchers(HttpMethod.POST, "/rest/api-login/public/login").permitAll() 
-		    		      , areasConfig.getRest())
-		    		      .antMatchers( "/rest/**").authenticated() //by default for other (unknown) rest-api
+		    		      authorizeRequests.antMatchers(HttpMethod.POST, MySecurityExtension.DEFAULT_REST_STANDALONE_LOGIN_PATH).permitAll() 
+		    		      , areasConfig.getRest())	
+		    		   .antMatchers( "/rest/**").authenticated()//by default
 		    		 )
 				.cors() // enable CORS (avec @CrossOrigin sur class @RestController)
 				.and().csrf().disable();
@@ -156,12 +157,12 @@ public class WithSecurityMainFilterChainConfig {
 		      .antMatcher("/site/**") //VERY IMPORTANT (matching for spring mvc site part and @Order(2) FilterChain
 		      .authorizeRequests(
 			    		 authorizeRequests -> addPermissionsFromAreaConfig(
-			    		      authorizeRequests.antMatchers( "/site/login").permitAll()
-			  		                           .antMatchers( "/site/logout").permitAll() 			  		                   
+			    		      authorizeRequests.antMatchers( MySecurityExtension.DEFAULT_SITE_FORM_LOGIN_URI).permitAll()
+			  		                           .antMatchers( MySecurityExtension.DEFAULT_SITE_FORM_LOGOUT_URI).permitAll() 			  		                   
 			    		      ,areasConfig.getSite())
-	                         .antMatchers( "/site/**").authenticated() //by default for other site parts
+			    		 .antMatchers( "/site/**").authenticated()//by default
 			    		 )
-				.formLogin().loginPage("/site/login")
+				.formLogin().loginPage(MySecurityExtension.DEFAULT_SITE_FORM_LOGIN_URI)
 		        .and().csrf()
 		        .and().cors().disable();
 		
@@ -184,8 +185,8 @@ public class WithSecurityMainFilterChainConfig {
 				  .authorizeRequests(
 				    		 authorizeRequests -> addPermissionsFromAreaConfig(
 				    				                  addPermissionsFromAreaConfig(authorizeRequests,areasConfig.getTools()),
-				    				                  areasConfig.getOther())
-				    		                      .antMatchers( "/**").authenticated() //by default for others of others
+				    				                  areasConfig.getOther())	
+				    		 					.antMatchers( "/**").authenticated()//by default
 				    		 )
 		        //.headers().frameOptions().disable() //ok for h2-console
 		        .headers().frameOptions().sameOrigin() //ok for h2-console

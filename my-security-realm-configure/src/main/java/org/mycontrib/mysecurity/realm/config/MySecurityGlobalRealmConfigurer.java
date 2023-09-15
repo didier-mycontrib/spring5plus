@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 
 import org.mycontrib.mysecurity.common.MyRealmConfigurer;
 import org.mycontrib.mysecurity.common.RealmPurposeEnum;
-import org.mycontrib.mysecurity.realm.config.default_users.MySecurityDefaultUsersSimpleConfigurer;
+import org.mycontrib.mysecurity.common.extension.MySecurityDefaultUsersSimpleConfigurer;
 import org.mycontrib.mysecurity.realm.config.jdbc.MyJdbcRealmSubConfigurer;
 import org.mycontrib.mysecurity.realm.config.memory.MyInMemoryRealmSubConfigurer;
 import org.mycontrib.mysecurity.realm.config.userdetails.MyUserDetailsServiceSubConfigurerBean;

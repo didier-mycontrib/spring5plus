@@ -2,8 +2,8 @@ package org.mycontrib.mysecurity.realm.config.jdbc;
 
 import java.util.Map;
 
+import org.mycontrib.mysecurity.common.extension.MySecurityDefaultUsersSimpleConfigurer;
 import org.mycontrib.mysecurity.realm.config.MyAuthenticationManagerBuilderHelper;
-import org.mycontrib.mysecurity.realm.config.default_users.MySecurityDefaultUsersSimpleConfigurer;
 import org.mycontrib.mysecurity.realm.properties.MySecurityRealmProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

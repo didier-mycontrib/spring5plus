@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 import org.mycontrib.mysecurity.area.properties.MySecurityAreaProperties;
 import org.mycontrib.mysecurity.area.properties.MySecurityAreasProperties;
-import org.mycontrib.mysecurity.common.MySecurityExtension;
+import org.mycontrib.mysecurity.common.extension.MySecurityExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

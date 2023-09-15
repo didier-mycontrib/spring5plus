@@ -41,7 +41,7 @@ public class AppCtrl {
 	String toLogin(Model model) {
 		System.out.println("/site/app/to-login");
 		model.addAttribute("title","login");
-	    return "login"; //login.jsp ou ... dans src/main/resources/META-INF/resources/jsp ou ailleurs
+	    return "login_client_bank"; //login_client_bank.jsp ou ... dans src/main/resources/META-INF/resources/jsp ou ailleurs
 	}
 	
 	@RequestMapping("/session-end")

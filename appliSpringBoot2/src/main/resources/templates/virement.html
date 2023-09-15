@@ -10,7 +10,9 @@
 			 </div>
       <div class="card-body">
 	  <form action="doVirement"  
-	        th:object="${virementForm}" method="POST">
+	        th:object="${virementForm}" method="POST">	        
+	            <input type="hidden"   th:name="${_csrf.parameterName}"      th:value="${_csrf.token}"/>
+	            
 			     <div class="form-group row">
 				    <label class="control-label text-sm-end col-sm-4">numCptDeb:</label> <!-- <span id="spanIdProd"></span> -->
 					<div class="col-sm-8">	

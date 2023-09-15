@@ -1,16 +1,27 @@
-package org.mycontrib.mysecurity.realm.config.default_users;
+package org.mycontrib.mysecurity.common.extension;
 
-import org.mycontrib.mysecurity.common.extension.MySecurityDefaultUsersSimpleConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.UserDetailsManagerConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-//NB: on peut créer une version spécifique de cette classe
-//dans le projet principal qui sera alors prioritaire par rapport à celle ci
+public interface MySecurityDefaultUsersSimpleConfigurer {
+	default void configureRestDefaultUsers(UserDetailsManagerConfigurer udmc) {
+		configureGlobalDefaultUsers(udmc);
+	}
+	default void configureSiteDefaultUsers(UserDetailsManagerConfigurer udmc) {
+		configureGlobalDefaultUsers(udmc);
+	}
+	void configureGlobalDefaultUsers(UserDetailsManagerConfigurer udmc);
+	//...
+}
+
+
+/*
+//NB: on peut créer une implémentation spécifique de cette interface
+//dans le projet principal qui sera alors prioritaire par rapport à l'implémentation par défaut
 //exemple :
-//@Component @Profile("withSecurity")
-// class MySecurityDefaultUsersSimpleConfigurerSpecificImpl implements MySecurityDefaultUsersSimpleConfigurer {
-public class MySecurityDefaultUsersSimpleConfigurerDefaultImpl implements MySecurityDefaultUsersSimpleConfigurer {
+@Component @Profile("withSecurity")
+public class MySecurityDefaultUsersSimpleConfigurerSpecificImpl implements MySecurityDefaultUsersSimpleConfigurer {
 
 	
 	private BCryptPasswordEncoder passwordEncoder;
@@ -30,3 +41,5 @@ public class MySecurityDefaultUsersSimpleConfigurerDefaultImpl implements MySecu
 	}
 
 }
+
+*/
