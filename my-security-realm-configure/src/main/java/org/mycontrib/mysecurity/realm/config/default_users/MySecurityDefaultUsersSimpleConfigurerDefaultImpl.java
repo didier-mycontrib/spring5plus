@@ -3,7 +3,7 @@ package org.mycontrib.mysecurity.realm.config.default_users;
 import org.mycontrib.mysecurity.common.extension.MySecurityDefaultUsersSimpleConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.UserDetailsManagerConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 //NB: on peut créer une version spécifique de cette classe
 //dans le projet principal qui sera alors prioritaire par rapport à celle ci
@@ -13,10 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class MySecurityDefaultUsersSimpleConfigurerDefaultImpl implements MySecurityDefaultUsersSimpleConfigurer {
 
 	
-	private BCryptPasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	public MySecurityDefaultUsersSimpleConfigurerDefaultImpl(BCryptPasswordEncoder passwordEncoder){
+	public MySecurityDefaultUsersSimpleConfigurerDefaultImpl(PasswordEncoder passwordEncoder){
 		this.passwordEncoder=passwordEncoder;
 	}
 	

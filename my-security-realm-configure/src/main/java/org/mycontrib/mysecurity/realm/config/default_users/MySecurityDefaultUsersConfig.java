@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class MySecurityDefaultUsersConfig {
 	
 	@Bean
-	@ConditionalOnMissingBean(type= { "org.mycontrib.mysecurity.config.MySecuritySimpleConfigurer"})
+	@ConditionalOnMissingBean(type= { "org.mycontrib.mysecurity.common.extension.MySecurityDefaultUsersSimpleConfigurer"})
 	MySecurityDefaultUsersSimpleConfigurer  defaultMySecuritySimpleConfigurer(BCryptPasswordEncoder passwordEncoder) {
 		return new MySecurityDefaultUsersSimpleConfigurerDefaultImpl(passwordEncoder);
 	}

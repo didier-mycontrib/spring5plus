@@ -1,12 +1,10 @@
 package org.mycontrib.mysecurity.chain.config;
 
-import org.mycontrib.mysecurity.area.config.AreaConfig;
-import org.mycontrib.mysecurity.area.config.AreasConfig;
 import org.mycontrib.mysecurity.chain.properties.MySecurityChainProperties;
 import org.mycontrib.mysecurity.common.MyFilterChainSimpleConfigurer;
 import org.mycontrib.mysecurity.common.MyRealmConfigurer;
 import org.mycontrib.mysecurity.common.RealmPurposeEnum;
-import org.mycontrib.mysecurity.common.extension.MySecurityExtension;
+import org.mycontrib.mysecurity.common.extension.WithSecurityFilterChainSubConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +15,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -35,13 +31,12 @@ public class WithSecurityMainFilterChainConfig {
 	
 	private static Logger logger = LoggerFactory.getLogger(WithSecurityMainFilterChainConfig.class);
 	
-	
+	@Autowired
+	private WithSecurityFilterChainSubConfig withSecurityFilterChainSubConfig;
 
 	@Autowired(required = false)
 	public MySecurityChainProperties mySecurityChainProperties;
 	
-	@Autowired
-	protected AreasConfig areasConfig; //set by WebProtectedAreaConfigurer and .properties
 	
 	@Autowired(required = true)
 	@Qualifier("OAuth2ResourceServer")
@@ -55,36 +50,6 @@ public class WithSecurityMainFilterChainConfig {
 	@Autowired(required = false)
 	MyRealmConfigurer myRealmConfigurer;
 	
-	/*
-	 public static AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry 
-        addPermissions(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authorizeRequests,
-  		               AreaConfig areaConfig) {
-	 */
-	
-	public static ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry 
-        addPermissionsFromAreaConfig(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authorizeRequests,
-  		               AreaConfig areaConfig) {
-		
-		ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authorizeRequestsWithPermissions = authorizeRequests;
-		
-		if(areaConfig.getWhitelist().length>0)
-			authorizeRequestsWithPermissions = authorizeRequestsWithPermissions
-			.antMatchers(areaConfig.getWhitelist()).permitAll();
-		
-		if(areaConfig.getBlacklist().length>0)
-			authorizeRequestsWithPermissions = authorizeRequestsWithPermissions
-			.antMatchers(areaConfig.getBlacklist()).denyAll();
-		
-		if(areaConfig.getReadonlylist().length>0)
-			authorizeRequestsWithPermissions = authorizeRequestsWithPermissions
-			.antMatchers(HttpMethod.GET, areaConfig.getReadonlylist()).permitAll();
-		
-		if(areaConfig.getProtectedlist().length>0)
-			authorizeRequestsWithPermissions = authorizeRequestsWithPermissions
-			.antMatchers(areaConfig.getProtectedlist()).authenticated();
-		
-		return authorizeRequestsWithPermissions;
-	}
 	
 	
 	//NB: 3 securityChain avec ordre important à respecter
@@ -97,43 +62,37 @@ public class WithSecurityMainFilterChainConfig {
 	//et va ignorer les autres (NB: la correspondance se fait via httpSecurity.antMatcher() sans s
 	//conventions d'URL : /rest/api-xyz/... ou /site/... ou **
 	
-	
-	
-	
+
 	
 	@Bean
     @Order(1)
 	protected SecurityFilterChain restApiFilterChain(HttpSecurity http)
 			throws Exception {
+		
+		HttpSecurity forSpecificChainHttp =
+				http.antMatcher("/rest/**"); //VERY IMPORTANT (matching for rest api and @Order(1) FilterChain)
 
-		HttpSecurity partialConfiguredHttp =
-		     http.antMatcher("/rest/**") //VERY IMPORTANT (matching for rest api and @Order(1) FilterChain)
-		     .authorizeRequests(
-		    		 authorizeRequests -> addPermissionsFromAreaConfig(
-		    		      authorizeRequests.antMatchers(HttpMethod.POST, MySecurityExtension.DEFAULT_REST_STANDALONE_LOGIN_PATH).permitAll() 
-		    		      , areasConfig.getRest())	
-		    		   .antMatchers( "/rest/**").authenticated()//by default
-		    		 )
-				.cors() // enable CORS (avec @CrossOrigin sur class @RestController)
-				.and().csrf().disable();
-
-		partialConfiguredHttp = withSpecificAuthenticationManagerIfNotNull(partialConfiguredHttp,RealmPurposeEnum.rest);
+		http = withSecurityFilterChainSubConfig.prepareRestApiFilterChain(forSpecificChainHttp);
+		
+		http = withSpecificAuthenticationManagerIfNotNull(http,RealmPurposeEnum.rest);
 	
 		
-		MyFilterChainSimpleConfigurer myFilterSimpleConfigurer=myOauth2FilterSimpleConfigurer; //by default
-		logger.debug("myStandaloneJwtFilterSimpleConfigurer="+myStandaloneJwtFilterSimpleConfigurer);
-		logger.info("rest-auth-type="+mySecurityChainProperties.getRestAuthType());
-		
-		
-		
-		if(myStandaloneJwtFilterSimpleConfigurer!=null) {
-			if(mySecurityChainProperties.getRestAuthType()!=null
-					&& mySecurityChainProperties.getRestAuthType().equals("StandaloneJwt"))
-			   myFilterSimpleConfigurer=myStandaloneJwtFilterSimpleConfigurer;
+		if(withSecurityFilterChainSubConfig.cancelRestConfigPostAction()==false) {
+			MyFilterChainSimpleConfigurer myFilterSimpleConfigurer=myOauth2FilterSimpleConfigurer; //by default
+			logger.debug("myStandaloneJwtFilterSimpleConfigurer="+myStandaloneJwtFilterSimpleConfigurer);
+			logger.info("rest-auth-type="+mySecurityChainProperties.getRestAuthType());
+			
+			
+			
+			if(myStandaloneJwtFilterSimpleConfigurer!=null) {
+				if(mySecurityChainProperties.getRestAuthType()!=null
+						&& mySecurityChainProperties.getRestAuthType().equals("StandaloneJwt"))
+				   myFilterSimpleConfigurer=myStandaloneJwtFilterSimpleConfigurer;
+			}
+			http =  myFilterSimpleConfigurer.configureEndOfSecurityChain(http);
 		}
 
-		HttpSecurity fullConfiguredHttp =  myFilterSimpleConfigurer.configureEndOfSecurityChain(partialConfiguredHttp);
-		return fullConfiguredHttp.build();
+		return http.build();
 		
 	}
 	
@@ -152,19 +111,11 @@ public class WithSecurityMainFilterChainConfig {
 		 sinon 403 / Forbidden !!!!
 		 */
 
+		HttpSecurity forSpecificChainHttp =
+				http.antMatcher("/site/**"); //VERY IMPORTANT (matching for spring mvc site part and @Order(2) FilterChain
+
+		http = withSecurityFilterChainSubConfig.prepareSpringMvcSiteFilterChain(forSpecificChainHttp);
 	
-		http=http
-		      .antMatcher("/site/**") //VERY IMPORTANT (matching for spring mvc site part and @Order(2) FilterChain
-		      .authorizeRequests(
-			    		 authorizeRequests -> addPermissionsFromAreaConfig(
-			    		      authorizeRequests.antMatchers( MySecurityExtension.DEFAULT_SITE_FORM_LOGIN_URI).permitAll()
-			  		                           .antMatchers( MySecurityExtension.DEFAULT_SITE_FORM_LOGOUT_URI).permitAll() 			  		                   
-			    		      ,areasConfig.getSite())
-			    		 .antMatchers( "/site/**").authenticated()//by default
-			    		 )
-				.formLogin().loginPage(MySecurityExtension.DEFAULT_SITE_FORM_LOGIN_URI)
-		        .and().csrf()
-		        .and().cors().disable();
 		
 		http = withSpecificAuthenticationManagerIfNotNull(http,RealmPurposeEnum.site);
 		return http.build();
@@ -180,49 +131,51 @@ public class WithSecurityMainFilterChainConfig {
     @Order(3)
 	protected SecurityFilterChain staticWebPartFilterChain(HttpSecurity http)
 			throws Exception {
+		
+		HttpSecurity forSpecificChainHttp =
+				http.antMatcher("/**"); //VERY IMPORTANT (matching for all other parts (static, ...) and @Order(3) FilterChain)
 
-		http=http.antMatcher("/**") //VERY IMPORTANT (matching for all other parts (static, ...) and @Order(3) FilterChain)
-				  .authorizeRequests(
-				    		 authorizeRequests -> addPermissionsFromAreaConfig(
-				    				                  addPermissionsFromAreaConfig(authorizeRequests,areasConfig.getTools()),
-				    				                  areasConfig.getOther())	
-				    		 					.antMatchers( "/**").authenticated()//by default
-				    		 )
-		        //.headers().frameOptions().disable() //ok for h2-console
-		        .headers().frameOptions().sameOrigin() //ok for h2-console
-		        .and().csrf().disable();//ok for h2-console
+		http = withSecurityFilterChainSubConfig.prepareDefaultOtherWebPartFilterChain(forSpecificChainHttp);
+        
 		return http.build();
 			
 	}
+	
+	private AuthenticationManager getDefaultOrSpecificRealmAuthenticationManager(HttpSecurity httpSecurity,
+			RealmPurposeEnum realmPurpose){
+		AuthenticationManager specificAuthMgr = withSecurityFilterChainSubConfig.provideSpecificRealmAuthenticationManager(httpSecurity, realmPurpose);
+		if(specificAuthMgr!=null)
+			return specificAuthMgr;
+		if(myRealmConfigurer==null) return null;
+		return myRealmConfigurer.getRealmAuthenticationManager(httpSecurity,realmPurpose);
+	}
+	
+	
 	
 	@Bean //default globalAuthenticationManager
 	//@ConditionalOnMissingBean(AuthenticationManager.class)
 	@Qualifier("global")
 	@Primary
 	public AuthenticationManager globalAuthenticationManager(HttpSecurity httpSecurity)throws Exception {
-		    if(myRealmConfigurer==null) return null;
-			return myRealmConfigurer.getRealmAuthenticationManager(httpSecurity,RealmPurposeEnum.global);
+		return getDefaultOrSpecificRealmAuthenticationManager(httpSecurity,RealmPurposeEnum.global);
 	}
 	
 	@Bean //default restAuthenticationManager
 	//@ConditionalOnMissingBean(AuthenticationManager.class)
 	@Qualifier("rest")
 	public AuthenticationManager restAuthenticationManager(HttpSecurity httpSecurity)throws Exception {
-		    if(myRealmConfigurer==null) return null;
-			return myRealmConfigurer.getRealmAuthenticationManager(httpSecurity,RealmPurposeEnum.rest);
+		return getDefaultOrSpecificRealmAuthenticationManager(httpSecurity,RealmPurposeEnum.rest);
 	}
 	
 	@Bean //default siteAuthenticationManager
 	//@ConditionalOnMissingBean(AuthenticationManager.class)
 	@Qualifier("site")
 	public AuthenticationManager siteAuthenticationManager(HttpSecurity httpSecurity)throws Exception {
-		    if(myRealmConfigurer==null) return null;
-			return myRealmConfigurer.getRealmAuthenticationManager(httpSecurity,RealmPurposeEnum.site);
+		return getDefaultOrSpecificRealmAuthenticationManager(httpSecurity,RealmPurposeEnum.site);
 	}
 	
 	private HttpSecurity withSpecificAuthenticationManagerIfNotNull(HttpSecurity http,RealmPurposeEnum realmPurpose)throws Exception {
-	    if(myRealmConfigurer==null) return http;
-	    AuthenticationManager authMgr =  myRealmConfigurer.getRealmAuthenticationManager(http,realmPurpose);
+	    AuthenticationManager authMgr =  getDefaultOrSpecificRealmAuthenticationManager(http,realmPurpose);
 	    if(authMgr!=null)
 	    	return http.authenticationManager(authMgr);
 	    else
