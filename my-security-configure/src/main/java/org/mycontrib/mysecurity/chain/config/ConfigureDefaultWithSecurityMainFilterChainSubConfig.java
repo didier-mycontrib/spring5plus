@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @Profile("withSecurity")
@@ -22,7 +22,7 @@ public class ConfigureDefaultWithSecurityMainFilterChainSubConfig  {
 	
 	@Bean
 	@ConditionalOnMissingBean(type= { "org.mycontrib.mysecurity.common.extension.WithSecurityFilterChainSubConfig" })
-	public WithSecurityFilterChainSubConfig  DefaultWithSecurityMainFilterChainSubConfig(BCryptPasswordEncoder passwordEncoder) {
+	public WithSecurityFilterChainSubConfig  DefaultWithSecurityMainFilterChainSubConfig(PasswordEncoder passwordEncoder) {
 		return new DefaultWithSecurityMainFilterChainSubConfig(areasConfig);
 	}
 	
