@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mycontrib.appliSpringWeb.entity.Customer;
-import org.mycontrib.appliSpringWeb.service.ServiceCompteImpl;
 import org.mycontrib.appliSpringWeb.service.ServiceCustomer;
 import org.mycontrib.mysecurity.common.extension.MySecurityExtension;
 import org.slf4j.Logger;
@@ -76,6 +75,12 @@ public class MyUserDetailsService implements UserDetailsService {
 		}
 			
 		return userDetails;
+		//NB: en retournant userDetails = new User(username, password, authorities);
+		//on retourne comme information une association entre usernameRecherché et
+        //(bonMotDePasseCrypté + liste des rôles)
+        //Le bonMotDePasseCrypté servira simplement à effectuer une comparaison avec le mot
+        //de passe qui sera saisi ultérieurement par l'utilisateur 
+		//(via l'aide de passwordEncoder.matches())
 	} 
 
 }

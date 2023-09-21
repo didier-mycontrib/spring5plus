@@ -25,7 +25,8 @@ public class GenericMapper {
 			target = targetClass.getDeclaredConstructor().newInstance();
 			BeanUtils.copyProperties(source, target);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			throw new RuntimeException("echec GenericMapper.map",e);
 		} 
 		return target;
 	}

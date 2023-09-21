@@ -24,10 +24,10 @@ public interface MySecurityDefaultUsersSimpleConfigurer {
 public class MySecurityDefaultUsersSimpleConfigurerSpecificImpl implements MySecurityDefaultUsersSimpleConfigurer {
 
 	
-	private BCryptPasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	public MySecurityDefaultUsersSimpleConfigurerDefaultImpl(BCryptPasswordEncoder passwordEncoder){
+	public MySecurityDefaultUsersSimpleConfigurerDefaultImpl(PasswordEncoder passwordEncoder){
 		this.passwordEncoder=passwordEncoder;
 	}
 	
