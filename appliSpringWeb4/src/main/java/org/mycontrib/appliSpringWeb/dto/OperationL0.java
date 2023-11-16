@@ -34,8 +34,7 @@ public class OperationL0 implements WithId<Long>{
 	}
 	
 	@Override
-	@JsonIgnore
-	public Long getId() {
+	public Long extractId() {
 		return idOp;
 	}
 	

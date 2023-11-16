@@ -5,21 +5,22 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 /*
- * GenericMapper = mapper/convertisseur hyper générique utilisant 
+ * UltraBasicGenericMapper = mapper/convertisseur hyper générique utilisant 
  * seulement BeanUtils.copyProperties
  * 
  * NB: pour un eventuel basculement sur mapStruct ou autre,
  * les méthodes de sont pas "static"
  * et cet objet sera à la fois accessible via le singleton élémentaire
- * GenericMapper.MAPPER et comme un composant spring injectable
+ * UltraBasicGenericMapper.MAPPER et comme un composant spring injectable
  */
-public class GenericMapper {
+public class UltraBasicGenericMapper {
 	
-	public static GenericMapper MAPPER = new GenericMapper();
+	public static UltraBasicGenericMapper MAPPER = new UltraBasicGenericMapper();
 
-	//GenericMapper.MAPPER.map(compteEntity,CompteDto.class) sans spring
-	//genericMapper.map(compteEntity,CompteDto.class) avec injection spring
+	//UltraBasicGenericMapper.MAPPER.map(compteEntity,CompteDto.class) sans spring
+	//ultraBasicGenericMapper.map(compteEntity,CompteDto.class) avec injection spring
 	public /*static*/ <S,D> D map(S source , Class<D> targetClass) {
+		if(source==null || targetClass==null) return null;
 		D target  = null;
 		try {
 			target = targetClass.getDeclaredConstructor().newInstance();
@@ -31,9 +32,10 @@ public class GenericMapper {
 		return target;
 	}
 	
-	//GenericMapper.MAPPER.map(ListeCompteEntity,CompteDto.class) sans spring
-	//genericMapper.map(ListeCompteEntity,CompteDto.class) avec injection spring
+	//UltraBasicGenericMapper.MAPPER.map(ListeCompteEntity,CompteDto.class) sans spring
+	//ultraBasicGenericMapper.map(ListeCompteEntity,CompteDto.class) avec injection spring
 	public /*static*/ <S,D> List<D> map(List<S> sourceList , Class<D> targetClass){
+		if(sourceList==null || targetClass==null) return null;
 		return  sourceList.stream()
 			   .map((source)->map(source,targetClass))
 			   .collect(Collectors.toList());

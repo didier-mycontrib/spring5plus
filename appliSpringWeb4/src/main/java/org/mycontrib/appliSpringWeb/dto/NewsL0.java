@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
  * 
  * CompteL0 ici en version "Basic"
  */
-
+/*
 //@Getter @Setter @NoArgsConstructor @ToString
 @Data @NoArgsConstructor
 public class NewsL0 implements WithId<Long> {
@@ -28,5 +28,17 @@ public class NewsL0 implements WithId<Long> {
 		this.id = id;
 		this.text = text;
 		this.date = date;
+	}
+
+	@Override
+	public Long extractId() {
+		return this.id;
+	}
+}
+*/
+public record NewsL0(Long id,String text,String date) implements WithId<Long>{
+	@Override
+	public Long extractId() {
+		return this.id;
 	}
 }

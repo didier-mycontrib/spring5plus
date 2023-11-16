@@ -21,6 +21,11 @@ public class CustomerL0 implements WithId<Long> {
 		this.lastname = lastname;
 		this.password = password;
 	}
+
+	@Override
+	public Long extractId() {
+		return this.id;
+	}
 	
 	
 	

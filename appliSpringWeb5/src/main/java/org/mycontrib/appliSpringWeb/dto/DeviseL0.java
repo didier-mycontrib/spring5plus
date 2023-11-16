@@ -40,8 +40,7 @@ public class DeviseL0 implements WithId<String> {
 	}
 
 	@Override
-	@JsonIgnore
-	public String getId() {
+	public String extractId() {
 		return code;
 	}
 

@@ -31,8 +31,7 @@ public class CompteL0 implements WithId<Long> {
 	}
 
 	@Override
-	@JsonIgnore
-	public Long getId() {
+	public Long extractId() {
 		return this.numero;
 	}
 	

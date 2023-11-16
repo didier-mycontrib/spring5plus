@@ -1,15 +1,17 @@
 package org.mycontrib.appliSpringWeb.converter;
 
-import org.mycontrib.util.generic.converter.GenericMapper;
+import org.mycontrib.util.generic.converter.UltraBasicGenericMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.nimbusds.jose.shaded.json.writer.ArraysMapper.GenericMapper;
 
 @Configuration
 public class GenericMapperAndConverterSpringConfig {
 	
 	@Bean
-	public GenericMapper genericMapper() {
-		return GenericMapper.MAPPER;
+	public UltraBasicGenericMapper genericMapper() {
+		return UltraBasicGenericMapper.MAPPER;
 	}
 	
 	@Bean

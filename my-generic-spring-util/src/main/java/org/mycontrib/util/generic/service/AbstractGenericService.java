@@ -108,7 +108,7 @@ public abstract class AbstractGenericService<E,ID  extends Serializable>
 
 	@Override
 	public <DTO extends WithId<ID>> DTO saveNewFromDto(DTO dto) throws ConflictException {
-		        ID id =  dto.getId();
+		        ID id =  dto.extractId();
 		        if(id!=null){
 		        	if(this.existById(id)) {
 		        		throw new ConflictException("another entity already exists for id=" + id);
@@ -127,7 +127,7 @@ public abstract class AbstractGenericService<E,ID  extends Serializable>
 
 	@Override
 	public <DTO  extends WithId<ID>> void updateExistingFromDto(DTO dto) throws NotFoundException {
-        shouldExistById(dto.getId());//may throw NotFoundException
+        shouldExistById(dto.extractId());//may throw NotFoundException
 
 		E entity = genericConverter.map(dto, mainEntityClass);
 		initEntityRelationShipsFromDtoBeforeSave(entity,dto);//or ...

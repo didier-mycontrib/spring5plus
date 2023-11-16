@@ -1,7 +1,6 @@
 package org.mycontrib.appliSpringWeb.converter;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +13,7 @@ import org.mycontrib.appliSpringWeb.dto.OperationL0;
 import org.mycontrib.appliSpringWeb.entity.Compte;
 import org.mycontrib.appliSpringWeb.entity.Customer;
 import org.mycontrib.appliSpringWeb.entity.News;
-import org.mycontrib.util.generic.converter.GenericMapper;
+import org.mycontrib.util.generic.converter.UltraBasicGenericMapper;
 import org.springframework.beans.BeanUtils;
 
 //NB: pour un eventuel basculement sur mapStruct ou autre,
@@ -84,8 +83,8 @@ public class DtoConverter {
 	public  CompteL2 compteToCompteL2(Compte entity) {
 		CompteL2 compteDto = new CompteL2();
 		BeanUtils.copyProperties(entity, compteDto); //compact/écriture concise mais pas rapide
-		compteDto.setCustomer(GenericMapper.MAPPER.map(entity.getCustomer(), CustomerL0.class));
-		compteDto.setOperations(GenericMapper.MAPPER.map(entity.getOperations(), OperationL0.class));
+		compteDto.setCustomer(UltraBasicGenericMapper.MAPPER.map(entity.getCustomer(), CustomerL0.class));
+		compteDto.setOperations(UltraBasicGenericMapper.MAPPER.map(entity.getOperations(), OperationL0.class));
 		return compteDto;
 	}
 	

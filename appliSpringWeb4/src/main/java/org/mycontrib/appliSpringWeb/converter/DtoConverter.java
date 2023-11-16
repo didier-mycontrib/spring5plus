@@ -14,7 +14,7 @@ import org.mycontrib.appliSpringWeb.dto.OperationL0;
 import org.mycontrib.appliSpringWeb.entity.Compte;
 import org.mycontrib.appliSpringWeb.entity.Customer;
 import org.mycontrib.appliSpringWeb.entity.News;
-import org.mycontrib.util.generic.converter.GenericMapper;
+import org.mycontrib.util.generic.converter.UltraBasicGenericMapper;
 import org.springframework.beans.BeanUtils;
 
 //NB: pour un eventuel basculement sur mapStruct ou autre,
@@ -59,6 +59,9 @@ public class DtoConverter {
 				              );
 	}
 	
+	
+	//NB: if NewsL0 is a record , explicit newsToNewsL0() and newsL0ToNews() must be provided
+	//beacause faultback BeanUtils.copyProperties() cannot operate on immutable allArgsContructor records
 	public NewsL0 newsToNewsL0(News news) {
 		
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -73,19 +76,21 @@ public class DtoConverter {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		Date d = null;
 		try {
-			d= df.parse(newsDto.getDate());
+			//d= df.parse(newsDto.getDate());//class version
+			d= df.parse(newsDto.date());//record version
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return new News(newsDto.getId(), newsDto.getText() , d); 
+		//return new News(newsDto.getId(), newsDto.getText() , d); //class version
+		return new News(newsDto.id(), newsDto.text() , d); //record version
 	}
 	
 	public  CompteL2 compteToCompteL2(Compte entity) {
 		CompteL2 compteDto = new CompteL2();
 		BeanUtils.copyProperties(entity, compteDto); //compact/écriture concise mais pas rapide
-		compteDto.setCustomer(GenericMapper.MAPPER.map(entity.getCustomer(), CustomerL0.class));
-		compteDto.setOperations(GenericMapper.MAPPER.map(entity.getOperations(), OperationL0.class));
+		compteDto.setCustomer(UltraBasicGenericMapper.MAPPER.map(entity.getCustomer(), CustomerL0.class));
+		compteDto.setOperations(UltraBasicGenericMapper.MAPPER.map(entity.getOperations(), OperationL0.class));
 		return compteDto;
 	}
 	

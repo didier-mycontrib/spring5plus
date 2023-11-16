@@ -1,7 +1,5 @@
 package org.mycontrib.appliSpringWeb.converter;
 
-import java.lang.reflect.Method;
-
 import org.mycontrib.util.generic.converter.AbstractGenericConverter;
 
 /*

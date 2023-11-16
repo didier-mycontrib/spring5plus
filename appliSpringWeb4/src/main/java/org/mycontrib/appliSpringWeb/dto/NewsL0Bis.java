@@ -1,7 +1,5 @@
 package org.mycontrib.appliSpringWeb.dto;
 
-import java.util.Date;
-
 import org.mycontrib.util.generic.dto.WithId;
 
 import lombok.Data;
@@ -17,13 +15,13 @@ import lombok.NoArgsConstructor;
 
 //@Getter @Setter @NoArgsConstructor @ToString
 @Data @NoArgsConstructor
-public class NewsL0 implements WithId<Long> {
+public class NewsL0Bis implements WithId<Long> {
 
     private Long id;
 	private String text;
 	private String date;
 	
-	public NewsL0(Long id, String text, String date) {
+	public NewsL0Bis(Long id, String text, String date) {
 		super();
 		this.id = id;
 		this.text = text;
@@ -35,3 +33,4 @@ public class NewsL0 implements WithId<Long> {
 		return this.id;
 	}
 }
+
