@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans 
+	https://www.springframework.org/schema/beans/spring-beans.xsd">
+                                
+  
+  <bean id="printMessageWithDelayTaskletA" class="tp.mySpringBatch.tasklet.PrintMessageWithDelayTasklet">
+      <!--   <property name="message" value="AAAA_OK"/> -->
+        <property name="message" value="AAAA_ERROR"/> 
+      <property name="delay" value="2000"/>
+  </bean>
+  
+  <bean id="printMessageWithDelayTaskletB" class="tp.mySpringBatch.tasklet.PrintMessageWithDelayTasklet">
+      <property name="message" value="BBBB"/>
+      <property name="delay" value="2000"/>
+  </bean>
+  
+  <bean id="printMessageWithDelayTaskletC" class="tp.mySpringBatch.tasklet.PrintMessageWithDelayTasklet">
+      <property name="message" value="CCCC"/>
+      <property name="delay" value="2000"/>
+  </bean>
+  
+   <bean id="printMessageWithDelayTasklet_COMPLETED" class="tp.mySpringBatch.tasklet.PrintMessageWithDelayTasklet">
+      <property name="message" value="COMPLETED"/>
+      <property name="delay" value="500"/>
+  </bean>
+  
+  <bean id="printMessageWithDelayTasklet_COMPLETED_WITH_SKIPS" class="tp.mySpringBatch.tasklet.PrintMessageWithDelayTasklet">
+      <property name="message" value="COMPLETED_WITH_SKIPS"/>
+      <property name="delay" value="500"/>
+  </bean>
+    
+   
+<job id="mySimpleSequentialStepsJob" xmlns="http://www.springframework.org/schema/batch">  
+     
+	    <step  id="step1_of_mySimpleSequentialStepsJob"  next="step2_of_mySimpleSequentialStepsJob">  
+	        <tasklet   ref="printMessageWithDelayTaskletA" />
+	    </step>
+
+	    <step  id="step2_of_mySimpleSequentialStepsJob" next="step3_of_mySimpleSequentialStepsJob">
+	        <tasklet   ref="printMessageWithDelayTaskletB" />
+	    </step>	
+	    
+	    <step  id="step3_of_mySimpleSequentialStepsJob" >
+	        <tasklet   ref="printMessageWithDelayTaskletC" />
+	    </step>    	 
+ </job>
+ 
+ 
+ 
+ <job id="mySimpleConditionalStepsJob" xmlns="http://www.springframework.org/schema/batch">  
+     
+	    <step  id="step1_of_mySimpleConditionalStepsJob" >  
+	        <tasklet   ref="printMessageWithDelayTaskletA" />        
+	        <next on="FAILED" to="step3_of_mySimpleConditionalStepsJob" />
+	        <!--  <next on="COMPLETED" to="step2_of_mySimpleConditionalStepsJob" />  -->
+	        <next on="*" to="step2_of_mySimpleConditionalStepsJob" />
+	    </step>
+
+	    <step  id="step2_of_mySimpleConditionalStepsJob" next="step3_of_mySimpleConditionalStepsJob">
+	        <tasklet   ref="printMessageWithDelayTaskletB" />
+	    </step>	
+	    
+	    <step  id="step3_of_mySimpleConditionalStepsJob" >
+	        <tasklet   ref="printMessageWithDelayTaskletC" />
+	    </step>    	 
+ </job>
+ 
+ <bean id="mySkipCheckingDecider" class="tp.mySpringBatch.decider.MySkipCheckingDecider" />
+ 
+ <job id="withDecisionFlowJob" xmlns="http://www.springframework.org/schema/batch">  
+     
+	    <step  id="step1_of_withDecisionFlowJob" next="mySkipCheckingDecision">  
+	       <tasklet>
+	         
+    		<chunk reader="personCsvFileReader" writer="personJsonFileItemWriter"
+    		    processor="simpleUppercasePersonProcessor" 
+    		       commit-interval="1" skip-limit="5" > 
+    		    <skippable-exception-classes>
+	        	    <include class="org.springframework.batch.item.ItemReaderException" />
+	        	</skippable-exception-classes>	
+	        </chunk>
+    	   
+    	    <!--  
+    		<chunk reader="personCsvWithErrorsFileReader" writer="personJsonFileItemWriter"
+    		       processor="simpleUppercasePersonProcessor"
+        		   commit-interval="1" skip-limit="5" >
+        		<skippable-exception-classes>
+	        	    <include class="org.springframework.batch.item.ItemReaderException" />
+	        	</skippable-exception-classes>	
+	        </chunk>	
+	         -->        
+   	 	   </tasklet>
+	    </step>
+	    <decision id="mySkipCheckingDecision" decider="mySkipCheckingDecider">
+	        <next on="COMPLETED_WITH_SKIPS" to="step3_of_withDecisionFlowJob" />
+	        <next on="*" to="step2_of_withDecisionFlowJob" />
+	    </decision>
+
+	    <step  id="step2_of_withDecisionFlowJob">
+	        <tasklet   ref="printMessageWithDelayTasklet_COMPLETED" />
+	    </step>	
+	    
+	    <step  id="step3_of_withDecisionFlowJob" >
+	        <tasklet   ref="printMessageWithDelayTasklet_COMPLETED_WITH_SKIPS" />
+	    </step>    	 
+ </job>
+ 
+ </beans>

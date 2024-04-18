@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans 
+	https://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util 
+	https://www.springframework.org/schema/util/spring-util.xsd">
+	
+	
+<bean id="personFixedPosTxtFileReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+    <property name="resource" value="file:data/input/txt/fixedPositionInputData.txt" />
+    <property name="lineMapper">
+        <bean class=" org.springframework.batch.item.file.mapping.DefaultLineMapper">
+            <property name="fieldSetMapper">
+                   <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                          <property name = "targetType" value="tp.mySpringBatch.model.Person" />
+                    </bean>
+             </property>
+             <property name="lineTokenizer">
+             	<bean   class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+    				<property name="names" value="id,firstName,lastName,age,active" />
+    				<property name="columns" value="1-8,9-32, 33-56, 57-60, 61-66" />
+				</bean>
+			</property>
+        </bean>
+    </property>
+</bean>
+    
+                        
+   
+ </beans>

@@ -1,0 +1,7 @@
+[
+ {"id":1,"firstName":"Jean","lastName":"BON","age":41,"active":true},
+ {"id":2,"firstName":"Alex","lastName":"THERIEUR","age":42,"active":false},
+ {"id":3,"firstName":"Axelle","lastName":"AIRE","age":33,"active":true},
+ {"id":4,"firstName":"Olie","lastName":"CONDOR","age":44,"active":false},
+ {"id":5,"firstName":"Laurent","lastName":"HOUTAN","age":50,"active":false}
+]

@@ -1,0 +1,11 @@
+id;firstName;lastName;age;active
+1;Jean;Bon;41;true
+2;Alex;Therieur;42;false
+LINE-WITH-ERROR-A
+LINE-WITH-ERROR-B
+LINE-WITH-ERROR-C
+3;Axelle;Aire;33;true
+4;Olie;Condor;44;false
+LINE-WITH-ERROR-D
+LINE-WITH-ERROR-E
+5;Laurent;Houtan;50;false

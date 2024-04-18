@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans 
+	https://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util 
+	https://www.springframework.org/schema/util/spring-util.xsd">
+    
+<!-- 
+NB: la table person doit exister 
+le inputdbDataSource provient actuellement de la configuration java
+ -->
+
+<bean id="jdbcPersonReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+    <property name="dataSource" ref="inputdbDataSource" /> <!-- from java config -->
+    <property name="sql" value="select id,first_name, last_name, age, is_active from person" />
+    <property name="rowMapper" >
+       <bean class="tp.mySpringBatch.db.PersonRowMapper">
+       </bean>
+    </property>
+</bean>     
+
+<bean id="jdbcPartitionPersonReader" scope="step"
+class="org.springframework.batch.item.database.JdbcPagingItemReader">
+    <property name="dataSource" ref="inputdbDataSource" /> <!-- from java config -->
+    <property name="queryProvider">
+	  <bean class="org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean">
+		<property name="dataSource" ref="inputdbDataSource" />
+		<property name="selectClause" value="select id, first_name, last_name, age, is_active" />
+		<property name="fromClause" value="from person" />
+		<property name="whereClause" value="where id &gt;= :fromId and id &lt;= :toId" />
+		<property name="sortKey" value="id" />
+	  </bean>
+	</property>
+    <property name="parameterValues">
+	  <map>
+		<entry key="fromId" value="#{stepExecutionContext[fromId]}" />
+		<entry key="toId" value="#{stepExecutionContext[toId]}" />
+	  </map>
+	</property>
+	<property name="pageSize" value="5" />
+    <property name="rowMapper" >
+       <bean class="tp.mySpringBatch.db.PersonRowMapper">
+       </bean>
+    </property>
+</bean>     
+
+   
+ </beans>

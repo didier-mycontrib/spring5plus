@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans 
+	https://www.springframework.org/schema/beans/spring-beans.xsd">
+                                
+ 
+   
+<job id="insertIntoCsvFromDbJob" xmlns="http://www.springframework.org/schema/batch">  
+	 <step  id="step1_of_insertIntoCsvFromDbJob"  >  
+	     <tasklet>
+    		<chunk reader="jdbcPersonReader" writer="csvFilePersonWriter"  commit-interval="1" />
+   	 	</tasklet>
+	 </step>	    	 
+ </job>
+ 
+ </beans>

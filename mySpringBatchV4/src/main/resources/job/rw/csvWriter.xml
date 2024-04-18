@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans 
+	https://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util 
+	https://www.springframework.org/schema/util/spring-util.xsd">
+	
+<bean id="outputDataCsvResource" class="tp.mySpringBatch.job.xml.MyWritableResourceFactoryBean"  >
+    <property name="path" value="data/output/csv/outputData.csv" />
+ </bean>
+	
+	
+<bean id="csvFilePersonWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+   <!--  <property name="resource" value="file:data/output/csv/outputData.csv" /> -->
+      <property name = "resource" ref = "outputDataCsvResource" /> 
+    <property name="appendAllowed" value="false" />
+    <property name="lineAggregator">
+        <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+             <property name = "delimiter" value = ";" />
+             <property name="fieldExtractor">
+                   <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                          <property name = "names"  value="id,firstName,lastName,age,active" />		                    
+                    </bean>
+             </property>
+        </bean>
+    </property>
+</bean>
+    
+    <!-- 
+    amelioration possible (en trouvant un equivalent xml ):
+     .headerCallback((writer)-> {writer.write("firstname;lastname;age;active");})
+     -->
+           
+ <bean id="csvFilePartitionPersonWriter" scope="step" 
+     class="org.springframework.batch.item.file.FlatFileItemWriter">
+    <property name="resource" value="file:data/output/csv/outputData_#{stepExecutionContext[fromId]}-#{stepExecutionContext[toId]}.csv" />
+    <property name="appendAllowed" value="false" />
+    <property name="lineAggregator">
+        <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+             <property name = "delimiter" value = ";" />
+             <property name="fieldExtractor">
+                   <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                          <property name = "names"  value="id,firstName,lastName,age,active" />
+                    </bean>
+             </property>
+        </bean>
+    </property>
+</bean>
+ 
+   
+ </beans>

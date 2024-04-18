@@ -1,0 +1,5 @@
+id;firstName;lastName;age;active
+1;Jacques;Sonne;41;true
+2;Alain;Verse;52;false
+3;Tristan;Douille;52;false
+4;Jean;Racine;32;false

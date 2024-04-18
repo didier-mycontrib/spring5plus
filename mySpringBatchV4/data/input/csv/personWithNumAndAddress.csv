@@ -1,0 +1,6 @@
+id;firstName;lastName;age;active;socialSecurityNumber;address
+1;Jean;Bon;41;true;101020300400518;FRA!75001!Paris!rue_xy!2!1er etage
+2;Alex;Therieur;42;false;101020300400518;FRA!80000!amiens!rue zz!3!1er etage
+3;Axelle;Aire;33;true;201020300400565;FRA!76000!Rouen!rue xy!4!1er etage
+4;Olie;Condor;44;false;201020300400565;FRA!60000!Beauvais!rue zz!5!1er etage
+5;Laurent;Houtan;50;false;101020300400518;FRA!27000!Evreux!rue xy!6!1er etage

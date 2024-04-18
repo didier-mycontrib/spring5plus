@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans 
+	https://www.springframework.org/schema/beans/spring-beans.xsd">
+                 
+ <bean class="org.springframework.batch.core.scope.StepScope" /> 
+ <!-- it is necessary for scope="step" but need spring.main.allow-bean-definition-overriding=true in application.properties  -->            
+  
+  <bean id="printMessageTaskletMsg1" scope="step" class="tp.mySpringBatch.tasklet.PrintMessageTasklet">
+      <property name="message" value="#{jobParameters['msg1']}"/>
+      <!--  <property name="executionContext" value="#{stepExecution.jobExecution.executionContext}" /> -->
+  </bean>
+  
+    <bean id="printMessageTaskletMsg2" scope="step" class="tp.mySpringBatch.tasklet.PrintMessageTasklet">
+      <property name="message" value="JobID=#{jobParameters['JobID']}"/>
+  </bean>
+    
+   
+<job id="myHelloWorldWithParameterJob" xmlns="http://www.springframework.org/schema/batch">  
+     
+	    <step  id="step1_with_param"    next="step2_with_param">  
+	        <tasklet   ref="printMessageTaskletMsg1" />
+	    </step>
+
+	    <step  id="step2_with_param" >
+	        <tasklet   ref="printMessageTaskletMsg2" />
+	    </step>	    	 
+ </job>
+ 
+ </beans>

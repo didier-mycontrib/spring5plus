@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans 
+	https://www.springframework.org/schema/beans/spring-beans.xsd">
+        
+   <bean id="myRangePartitioner" class="tp.mySpringBatch.partitioner.MyRangePartitioner" >
+       <property name="range" value="5" /> <!-- interval size of index range to be managed by a specific thread/partition -->
+   </bean> 
+   
+   <bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor" />                            
+  
+  <!-- partitioner job -->
+  <job id="myPartitionJob" xmlns="http://www.springframework.org/schema/batch">
+	    
+    <!-- master/manager step, 4 threads (grid-size)  -->
+    <step id="managerStep">
+	<partition step="workerStep" partitioner="myRangePartitioner">
+		<handler grid-size="4" task-executor="taskExecutor" />
+	</partition>
+    </step>
+		
+  </job>
+
+  <!-- each thread will run this job, with different stepExecutionContext values. -->
+  <step id="workerStep" xmlns="http://www.springframework.org/schema/batch">
+	<tasklet>
+    	<chunk reader="jdbcPartitionPersonReader" writer="csvFilePartitionPersonWriter"
+        		commit-interval="1" processor="withDelayAndThreadNameLogPersonProcessor" />
+
+	</tasklet>
+  </step>
+  
+  <!-- 
+  NB: jdbcPartitionPersonReader (of scope="step") is defined in job/rw/jdbcReader 
+      and it will read records with person_id from #{stepExecutionContext[fromId]}
+                                              to #{stepExecutionContext[toId]}
+                                              
+  NB: csvFilePartitionPersonWriter (of scope="step") is defined in job/rw/csvWriter                                           
+      and it will generate output csv file with name=
+      "file:data/output/csv/outputData_#{stepExecutionContext[fromId]}-#{stepExecutionContext[toId]}.csv"
+   -->
+ 
+ 
+ </beans>

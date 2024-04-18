@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans 
+	https://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util 
+	https://www.springframework.org/schema/util/spring-util.xsd">
+    
+                
+ 
+   
+<job id="copyFromCsvToCsvJob" xmlns="http://www.springframework.org/schema/batch">  
+     
+	 <step  id="step1_of_copyFromCsvToCsvJob"  >  
+	     <tasklet>
+    		<chunk reader="personCsvFileReader" writer="csvFilePersonWriter"
+    		    processor="simpleUppercasePersonProcessor"
+        		commit-interval="1" />		        
+   	 	</tasklet>
+	 </step>
+	 
+	 <listeners>         
+		    <listener ref="jobCompletionNotificationListener" />            
+	</listeners>
+  	 
+ </job>
+ 
+ </beans>

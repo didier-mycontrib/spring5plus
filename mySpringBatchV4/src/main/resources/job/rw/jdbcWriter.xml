@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans 
+	https://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util 
+	https://www.springframework.org/schema/util/spring-util.xsd">
+    
+<!-- 
+NB: la table person doit exister 
+le outputdbDataSource provient actuellement de la configuration java
+ -->
+
+<bean id="jdbcItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+    <property name="dataSource" ref="outputdbDataSource" /> <!-- from java config -->
+    <property name="sql" value="insert into person (first_name, last_name, age, is_active) values (:firstName,:lastName,:age,:active)" />
+    <property name="itemSqlParameterSourceProvider" >
+       <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider">
+       </bean>
+    </property>
+</bean>                         
+ 
+   
+ </beans>

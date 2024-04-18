@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persons>
+	<person><id>1</id><active>true</active><age>41</age><firstName>Jean</firstName><lastName>Bono</lastName></person>
+	<person><id>2</id><active>false</active><age>42</age><firstName>Alex</firstName><lastName>Therieur</lastName></person>
+	<person><id>3</id><active>true</active><age>33</age><firstName>Axelle</firstName><lastName>Aire</lastName></person>
+	<person><id>4</id><active>false</active><age>44</age><firstName>Olie</firstName><lastName>Condor</lastName></person>
+	<person><id>5</id><active>true</active><age>29</age><firstName>Laurent</firstName><lastName>Houtan</lastName></person>
+</persons>

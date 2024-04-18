@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans 
+	https://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util 
+	https://www.springframework.org/schema/util/spring-util.xsd">
+	
+	
+<bean id="fixedPosTxtFilePersonWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+    <property name="resource" value="file:data/output/txt/fixedPositionOutputData.txt" />
+    <property name="lineAggregator">
+        <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+             <property name = "minimumLength" value = "66" />
+             <property name = "maximumLength" value = "66" />
+             <property name = "format" value = "%-8d%-24s%-24s%-4d%-6b" />
+             <property name="fieldExtractor">
+                   <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                          <property name = "names" value="id,firstName,lastName,age,active" />			                      
+                    </bean>
+             </property>
+        </bean>
+    </property>
+</bean>
+    
+                        
+   
+ </beans>

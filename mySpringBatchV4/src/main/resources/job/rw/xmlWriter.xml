@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans 
+	https://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util 
+	https://www.springframework.org/schema/util/spring-util.xsd">
+    
+<!-- marshaller are now in xmlMarshaller.xml (common to reader and writer) 
+    imported by commonConfig.xml ) 
+ -->
+
+
+<bean id="personXmlFileItemWriter" class="org.springframework.batch.item.xml.StaxEventItemWriter">
+    <!--  <property name="resource" ref="xmlOutputResource" />  -->
+    <property name="resource" value="file:data/output/xml/outputData.xml" />
+    <!-- <property name="marshaller" ref="personXmlJaxb2Marshaller" /> -->
+    <property name="marshaller" ref="personXmlXstreamMarshaller" />
+    <property name="rootTagName" value="persons" />
+    <property name="overwriteOutput" value="true" />
+</bean>                         
+ 
+   
+ </beans>

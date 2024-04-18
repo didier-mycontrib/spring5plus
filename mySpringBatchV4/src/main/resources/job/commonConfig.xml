@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	https://www.springframework.org/schema/batch/spring-batch.xsd
+	http://www.springframework.org/schema/beans 
+	https://www.springframework.org/schema/beans/spring-beans.xsd">
+                                
+   <!--   <alias name="batchTransactionManager" alias="transactionManager" /> -->
+   
+   <bean name="jobCompletionNotificationListener" class="tp.mySpringBatch.listener.JobCompletionNotificationListener" />
+   
+   <bean name="mySkippedErrorsListener" class="tp.mySpringBatch.listener.MySkippedErrorsListener" />
+  
+   <import resource="classpath:job/rw/csvReader.xml" />
+   <import resource="classpath:job/rw/csvWriter.xml" />
+     
+   <import resource="classpath:job/rw/xmlMarshaller.xml" /> <!-- marshallers are reused in xmlReader and xmlWriter -->
+   <import resource="classpath:job/rw/xmlWriter.xml" />
+   <import resource="classpath:job/rw/xmlReader.xml" />
+   
+   <import resource="classpath:job/rw/jsonReader.xml" />
+   <import resource="classpath:job/rw/jsonWriter.xml" />
+   
+   <import resource="classpath:job/rw/jdbcReader.xml" />
+   <import resource="classpath:job/rw/jdbcWriter.xml" />
+   
+   <import resource="classpath:job/rw/fixedPosTxtReader.xml" />
+   <import resource="classpath:job/rw/fixedPosTxtWriter.xml" />
+ 
+ </beans>
