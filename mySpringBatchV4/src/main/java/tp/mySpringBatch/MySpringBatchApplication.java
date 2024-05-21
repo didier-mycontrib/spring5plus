@@ -22,7 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication()
-@EnableBatchProcessing //nécessaire avec SpringBoot2/SpringBatch4 (pas absoluement nécessaire avec springBoot3/springBatch5)
+@EnableBatchProcessing //nécessaire avec SpringBoot2/SpringBatch4 (pas absolument nécessaire avec springBoot3/springBatch5)
 public class MySpringBatchApplication implements CommandLineRunner {
 	
   private String defaultJobName ; //to launch (set this value in initDefaultJobName())
